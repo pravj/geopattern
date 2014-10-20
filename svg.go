@@ -1,7 +1,9 @@
 // what about changing package to svg??
+// initially we are not using double quotes inside strings, think on it.
 package main
 
 import "fmt"
+import "reflect"
 
 type SVG struct {
     svg_string string
@@ -48,16 +50,50 @@ func (s *SVG) polyline(str string) {
     s.svg_string += polyline_str
 }
 
+func (s *SVG) write_args(args map[string]interface{}) string {
+    str := ""
+
+    for k, v := range args {
+        obj_type := fmt.Sprintf("%s", reflect.TypeOf(v))
+
+        switch obj_type {
+            case "string": str += fmt.Sprintf("%s='%s' ", k, v)
+            case "int": str += fmt.Sprintf("%s='%v' ", k, v)
+            default: {
+                str += fmt.Sprintf("%s='", k)
+                for K, V := range v.(map[string]string) {
+                    str += fmt.Sprintf("%s:%s;", K, V)
+                }
+                str += "' "
+            }
+        }
+    }
+
+    return str
+}
+
 func main() {
     svg := new(SVG)
 
     svg.set_height(100)
     svg.set_width(100)
 
+/*
     svg.rect(1,2,4,5)
     svg.circle(1,2,3)
     svg.path("path_string")
     svg.polyline("polyline_string")
 
     fmt.Println(svg.to_s())
+*/
+
+    args  := make(map[string]interface{})
+
+    args["first"] = "pravendra"
+    args["last"] = "singh"
+    args["age"] = 13
+
+    args["things"] = map[string]string{"alpha": "beta"}
+
+    fmt.Println(svg.write_args(args))
 }
