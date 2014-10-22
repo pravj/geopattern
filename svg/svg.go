@@ -32,8 +32,8 @@ func (s *SVG) Str() string {
     return s.header() + s.svg_string + s.footer()
 }
 
-func (s *SVG) Rect(x, y, w, h int) {
-    rect_str := fmt.Sprintf("<rect x='%v' y='%v' width='%v' height='%v' />", x, y, w, h)
+func (s *SVG) Rect(x, y, w, h string, args map[string]interface{}) {
+    rect_str := fmt.Sprintf("<rect x='%s' y='%s' width='%s' height='%s' %s />", x, y, w, h, s.Write_args(args))
     s.svg_string += rect_str
 }
 
