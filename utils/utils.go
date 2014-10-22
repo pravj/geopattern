@@ -6,6 +6,13 @@ import (
     "strconv"
 )
 
+const STROKE_COLOR string = "#000"
+const STROKE_OPACITY float64 = 0.02
+const FILL_COLOR_DARK string = "#222"
+const FILL_COLOR_LIGHT string = "#ddd"
+const OPACITY_MIN float64 = 0.02
+const OPACITY_MAX float64 = 0.15
+
 func Hash(s string) string {
     h := sha1.New()
     h.Write([]byte(s))
@@ -15,14 +22,14 @@ func Hash(s string) string {
     return fmt.Sprintf("%x", hash)
 }
 
-func Map(value, a_min, a_max, b_min, b_max float64) int {
+func Map(value, a_min, a_max, b_min, b_max float64) float64 {
     a_range := a_max - a_min
     b_range := b_max - b_min
 
-    return int(b_max - (a_max - value) * (b_range/a_range))
+    return (b_max - (a_max - value) * (b_range/a_range))
 }
 
-func Hex_val(str string, index, length int) int {
+func Hex_val(str string, index, length int) float64 {
     hex_str := str[index:index+length]
 
     hex_val, err := strconv.ParseInt(hex_str, 16, 0)
@@ -30,5 +37,17 @@ func Hex_val(str string, index, length int) int {
         panic(err)
     }
 
-    return int(hex_val)
+    return float64(hex_val)
+}
+
+func Opacity(value float64) float64 {
+    return Map(value, 0, 15, OPACITY_MIN, OPACITY_MAX)
+}
+
+func Fill_color(value float64) string {
+    if int(value) % 2 == 0 {
+        return FILL_COLOR_LIGHT
+    } else {
+        return FILL_COLOR_DARK
+    }
 }

@@ -32,8 +32,8 @@ func (s *SVG) Str() string {
     return s.header() + s.svg_string + s.footer()
 }
 
-func (s *SVG) Rect(x, y, w, h string, args map[string]interface{}) {
-    rect_str := fmt.Sprintf("<rect x='%s' y='%s' width='%s' height='%s' %s />", x, y, w, h, s.Write_args(args))
+func (s *SVG) Rect(x, y, w, h interface{}, args map[string]interface{}) {
+    rect_str := fmt.Sprintf("<rect x='%v' y='%v' width='%v' height='%v' %s />", x, y, w, h, s.Write_args(args))
     s.svg_string += rect_str
 }
 
@@ -61,6 +61,7 @@ func (s *SVG) Write_args(args map[string]interface{}) string {
         switch obj_type {
             case "string": str += fmt.Sprintf("%s='%s' ", k, v)
             case "int": str += fmt.Sprintf("%s='%v' ", k, v)
+            case "float64": str += fmt.Sprintf("%s='%v' ", k, v)
             default: {
                 str += fmt.Sprintf("%s='", k)
                 for K, V := range v.(map[string]string) {
