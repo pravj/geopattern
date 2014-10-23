@@ -47,8 +47,8 @@ func (s *SVG) Path(str string) {
     s.svg_string += path_str
 }
 
-func (s *SVG) Polyline(str string) {
-    polyline_str := fmt.Sprintf("<polyline points='%s' />", str)
+func (s *SVG) Polyline(str string, args map[string]interface{}) {
+    polyline_str := fmt.Sprintf("<polyline points='%s' %s />", str, s.Write_args(args))
     s.svg_string += polyline_str
 }
 

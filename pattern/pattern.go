@@ -3,15 +3,16 @@ package pattern
 import (
     "fmt"
     "github.com/pravj/geo_pattern/svg"
+    "github.com/pravj/geo_pattern/shapes"
     "github.com/pravj/geo_pattern/utils"
 )
 
 var Svg = new(svg.SVG)
-var hash = utils.Hash("nkman")
+var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_overlapping_circles()
+    geo_octagons()
 
     return Svg.Str()
 }
@@ -21,6 +22,34 @@ func generate_background() {
     args["fill"] = "rgb(255, 0, 150)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_octagons() {
+    square_size := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 10, 60)
+    tile := shapes.Build_octagon(square_size)
+
+    Svg.Set_height(int(square_size * 6))
+    Svg.Set_width(int(square_size * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+            val := utils.Hex_val(hash, i ,1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+            styles["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * square_size, float64(y) * square_size)
+
+            Svg.Polyline(tile, styles)
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_overlapping_circles() {
