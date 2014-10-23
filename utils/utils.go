@@ -40,6 +40,14 @@ func Hex_val(str string, index, length int) float64 {
     return float64(hex_val)
 }
 
+func Merge(map_a map[string]interface{}, map_b map[string]interface{}) map[string]interface{} {
+    for k, v := range map_a {
+        map_b[k] = v
+    }
+
+    return map_b
+}
+
 func Opacity(value float64) float64 {
     return Map(value, 0, 15, OPACITY_MIN, OPACITY_MAX)
 }

@@ -2,6 +2,7 @@ package pattern
 
 import (
     "fmt"
+    "math"
     "github.com/pravj/geo_pattern/svg"
     "github.com/pravj/geo_pattern/shapes"
     "github.com/pravj/geo_pattern/utils"
@@ -12,7 +13,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_plaid()
+    geo_hexagons()
 
     return Svg.Str()
 }
@@ -22,6 +23,66 @@ func generate_background() {
     args["fill"] = "rgb(120, 160, 200)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_hexagons() {
+    scale := utils.Hex_val(hash, 0, 1)
+    side_length := utils.Map(scale, 0, 15, 8, 60)
+    hex_height := side_length * math.Sqrt(3)
+    hex_width := side_length * 2
+    hex := shapes.Build_hexagon(side_length)
+
+    Svg.Set_height(int(hex_height * 6))
+    Svg.Set_width(int((hex_width * 3) + (side_length * 3)))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            var dy float64
+            if x % 2 == 0 {
+                dy = float64(y) * hex_height
+            } else {
+                dy = float64(y) * hex_height + hex_height / 2
+            }
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * side_length * 1.5 - hex_width / 2, dy - hex_height / 2)
+            Svg.Polyline(hex, utils.Merge(styles, style))
+
+            if x == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", 6 * side_length * 1.5 - hex_width / 2, dy - hex_height / 2)
+                Svg.Polyline(hex, utils.Merge(styles, style))
+            }
+
+            if y == 0 {
+                if x % 2 == 0 {
+                    dy = 6 * hex_height
+                } else {
+                    dy = 6 * hex_height + hex_height / 2
+                }
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * side_length * 1.5 - hex_width / 2, dy - hex_height / 2)
+                Svg.Polyline(hex, utils.Merge(styles, style))
+            }
+
+            if x == 0 && y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", 6 * side_length * 1.5 - hex_width / 2, 5 * hex_height + hex_height / 2)
+                Svg.Polyline(hex, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_plaid() {
