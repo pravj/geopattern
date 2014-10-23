@@ -12,7 +12,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_overlapping_rings()
+    geo_nested_squares()
 
     return Svg.Str()
 }
@@ -22,6 +22,44 @@ func generate_background() {
     args["fill"] = "rgb(120, 160, 200)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_nested_squares() {
+    block_size := utils.Map(utils.Hex_val(hash, 0 ,1), 0, 15, 4, 12)
+    square_size := block_size * 7
+
+    Svg.Set_height(int((square_size + block_size) * 6 + block_size * 6))
+    Svg.Set_width(int((square_size + block_size) * 6 + block_size * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = "none"
+            styles["stroke"] = fill
+            styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", block_size)}
+
+            Svg.Rect(float64(x) * square_size + float64(x) * block_size * 2 + block_size / 2, float64(y) * square_size + float64(y) * block_size * 2 + block_size / 2, square_size, square_size, styles)
+
+            val = utils.Hex_val(hash, 39 - i, 1)
+            opacity = utils.Opacity(val)
+            fill = utils.Fill_color(val)
+
+            styles = make(map[string]interface{})
+            styles["fill"] = "none"
+            styles["stroke"] = fill
+            styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", block_size)}
+
+            Svg.Rect(float64(x) * square_size + float64(x) * block_size * 2 + block_size / 2 + block_size * 2, float64(y) * square_size + float64(y) * block_size * 2 + block_size / 2 + block_size * 2, block_size * 3, block_size * 3, styles)
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_overlapping_rings() {
