@@ -12,7 +12,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_concentric_circles()
+    geo_overlapping_rings()
 
     return Svg.Str()
 }
@@ -24,10 +24,50 @@ func generate_background() {
     Svg.Rect(0, 0, "100%", "100%", args)
 }
 
+func geo_overlapping_rings() {
+    scale := utils.Hex_val(hash, 0 ,1)
+    ring_size := utils.Map(scale, 0, 15, 10, 60)
+    stroke_width := ring_size / 4
+
+    Svg.Set_height(int(ring_size * 6))
+    Svg.Set_width(int(ring_size * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = "none"
+            styles["stroke"] = fill
+            styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", stroke_width)}
+
+            Svg.Circle(float64(x) * ring_size, float64(y) * ring_size, ring_size - (stroke_width/2), styles)
+
+            if x == 0 {
+                Svg.Circle(6 * ring_size, float64(y) * ring_size, ring_size - (stroke_width/2), styles) 
+            }
+
+            if y == 0 {
+                Svg.Circle(float64(x) * ring_size, 6 * ring_size, ring_size - (stroke_width/2), styles)
+            }
+
+            if x == 0 && y == 0 {
+                Svg.Circle(6 * ring_size, 6 * ring_size, ring_size - (stroke_width/2), styles)
+            }
+
+            i = i + 1
+        }
+    }
+}
+
 func geo_concentric_circles() {
     scale := utils.Hex_val(hash, 0, 1)
     ring_size := utils.Map(scale, 0, 15, 10, 60)
-    stroke_width := ring_size/5
+    stroke_width := ring_size / 5
 
     fmt.Println((ring_size + stroke_width) * 6)
 
@@ -42,15 +82,15 @@ func geo_concentric_circles() {
             opacity := utils.Opacity(val)
             fill := utils.Fill_color(val)
 
-            cx := float64(x) * ring_size + float64(x) * stroke_width + (ring_size + stroke_width)/2
-            cy := float64(y) * ring_size + float64(y) * stroke_width + (ring_size + stroke_width)/2
+            cx := float64(x) * ring_size + float64(x) * stroke_width + (ring_size + stroke_width) / 2
+            cy := float64(y) * ring_size + float64(y) * stroke_width + (ring_size + stroke_width) / 2
 
             styles := make(map[string]interface{})
             styles["fill"] = "none"
             styles["stroke"] = fill
             styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", stroke_width)}
 
-            Svg.Circle(cx, cy, ring_size/2, styles)
+            Svg.Circle(cx, cy, ring_size / 2, styles)
 
             val = utils.Hex_val(hash, 39 - i, 1)
             opacity = utils.Opacity(val)
@@ -60,7 +100,7 @@ func geo_concentric_circles() {
             styles["fill"] = fill
             styles["fill-opacity"] = opacity
 
-            Svg.Circle(cx, cy, ring_size/4, styles)
+            Svg.Circle(cx, cy, ring_size / 4, styles)
 
             i = i + 1
         }
