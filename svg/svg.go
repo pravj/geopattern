@@ -37,8 +37,8 @@ func (s *SVG) Rect(x, y, w, h interface{}, args map[string]interface{}) {
     s.svg_string += rect_str
 }
 
-func (s *SVG) Circle(cx, cy, r int) {
-    circle_str := fmt.Sprintf("<circle cx='%v' cy='%v' r='%v' />", cx, cy, r)
+func (s *SVG) Circle(cx, cy, r interface{}, args map[string]interface{}) {
+    circle_str := fmt.Sprintf("<circle cx='%v' cy='%v' r='%v' %s />", cx, cy, r, s.Write_args(args))
     s.svg_string += circle_str
 }
 
