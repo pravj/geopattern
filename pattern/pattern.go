@@ -8,20 +8,63 @@ import (
 )
 
 var Svg = new(svg.SVG)
-var hash = utils.Hash("gunnu")
+var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_octagons()
+    geo_concentric_circles()
 
     return Svg.Str()
 }
 
 func generate_background() {
     args := make(map[string]interface{})
-    args["fill"] = "rgb(255, 0, 150)"
+    args["fill"] = "rgb(120, 160, 200)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_concentric_circles() {
+    scale := utils.Hex_val(hash, 0, 1)
+    ring_size := utils.Map(scale, 0, 15, 10, 60)
+    stroke_width := ring_size/5
+
+    fmt.Println((ring_size + stroke_width) * 6)
+
+    Svg.Set_height(int((ring_size + stroke_width) * 6))
+    Svg.Set_width(int((ring_size + stroke_width) * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            cx := float64(x) * ring_size + float64(x) * stroke_width + (ring_size + stroke_width)/2
+            cy := float64(y) * ring_size + float64(y) * stroke_width + (ring_size + stroke_width)/2
+
+            styles := make(map[string]interface{})
+            styles["fill"] = "none"
+            styles["stroke"] = fill
+            styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", stroke_width)}
+
+            Svg.Circle(cx, cy, ring_size/2, styles)
+
+            val = utils.Hex_val(hash, 39 - i, 1)
+            opacity = utils.Opacity(val)
+            fill = utils.Fill_color(val)
+
+            styles = make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+
+            Svg.Circle(cx, cy, ring_size/4, styles)
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_octagons() {

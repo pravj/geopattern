@@ -33,7 +33,7 @@ func Rotated_triangle(side_length, width float64) string {
 }
 
 func Build_hexagon(side_length float64) string {
-    s := side_length
+    c := side_length
     a := c / 2
     b := math.Sin(60 * math.Pi / 180) * c
 
