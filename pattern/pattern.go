@@ -12,7 +12,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_nested_squares()
+    geo_plaid()
 
     return Svg.Str()
 }
@@ -22,6 +22,62 @@ func generate_background() {
     args["fill"] = "rgb(120, 160, 200)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_plaid() {
+    height := 0
+    width := 0
+
+    i := 1
+    j := 0
+    for i <= 18 {
+
+        space := utils.Hex_val(hash, j, 1)
+        height = height + int(space) + 5
+
+        val := utils.Hex_val(hash, j + 1, 1)
+        opacity := utils.Opacity(val)
+        fill := utils.Fill_color(val)
+        stripe_height := val + 5
+
+        styles := make(map[string]interface{})
+        styles["opacity"] = opacity
+        styles["fill"] = fill
+
+        Svg.Rect(0, height, "100%", stripe_height, styles)
+
+        height = height + int(stripe_height)
+        j = j + 2
+
+        i = i + 1
+    }
+
+    i = 1
+    j = 0
+    for i <= 18 {
+
+        space := utils.Hex_val(hash, j, 1)
+        width = width + int(space) + 5
+
+        val := utils.Hex_val(hash, j + 1, 1)
+        opacity := utils.Opacity(val)
+        fill := utils.Fill_color(val)
+        stripe_width := val + 5
+
+        styles := make(map[string]interface{})
+        styles["opacity"] = opacity
+        styles["fill"] = fill
+
+        Svg.Rect(width, 0, stripe_width, "100%", styles)
+
+        width = width + int(stripe_width)
+        j = j + 2
+
+        i = i + 1
+    }
+
+    Svg.Set_height(int(height))
+    Svg.Set_width(int(width))
 }
 
 func geo_nested_squares() {
