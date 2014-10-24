@@ -13,7 +13,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_triangles()
+    geo_diamonds()
 
     return Svg.Str()
 }
@@ -23,6 +23,58 @@ func generate_background() {
     args["fill"] = "rgb(120, 160, 200)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_diamonds() {
+    diamond_width := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 10, 50)
+    diamond_height := utils.Map(utils.Hex_val(hash, 1, 1), 0, 15, 10, 50)
+    diamond := shapes.Build_diamond(diamond_width, diamond_height)
+
+    Svg.Set_height(int(diamond_height * 3))
+    Svg.Set_width(int(diamond_width * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+
+            var dx float64
+            if y % 2 != 0 {
+                dx = diamond_width / 2
+            }
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * diamond_width - diamond_width / 2 + dx, diamond_height/2 * float64(y) - diamond_height / 2)
+            Svg.Polyline(diamond, utils.Merge(styles, style))
+
+            if x == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", 6 * diamond_width - diamond_width / 2 + dx, diamond_height/2 * float64(y) - diamond_height / 2)
+                Svg.Polyline(diamond, utils.Merge(styles, style))
+            }
+
+            if y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * diamond_width - diamond_width / 2 + dx, diamond_height/2 * 6 - diamond_height / 2)
+                Svg.Polyline(diamond, utils.Merge(styles, style))
+            }
+
+            if x == 0 && y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", 6 * diamond_width - diamond_width / 2 + dx, diamond_height/2 * 6 - diamond_height / 2)
+                Svg.Polyline(diamond, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_triangles() {
