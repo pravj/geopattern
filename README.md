@@ -1,4 +1,4 @@
 GeoPattern
 ===========
-> Create beautiful generative background images from a string.
-> > Go port of jasonlong's awesome [library](https://github.com/jasonlong/geo_pattern)
+> now create beautiful generative background images from a strinig in golang.
+> > Go port of [jasonlong](https://github.com/jasonlong)'s awesome [GeoPattern](https://github.com/jasonlong/geo_pattern) library.

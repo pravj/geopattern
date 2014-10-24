@@ -42,8 +42,8 @@ func (s *SVG) Circle(cx, cy, r interface{}, args map[string]interface{}) {
     s.svg_string += circle_str
 }
 
-func (s *SVG) Path(str string) {
-    path_str := fmt.Sprintf("<path d='%s' />", str)
+func (s *SVG) Path(str string, args map[string]interface{}) {
+    path_str := fmt.Sprintf("<path d='%s' %s />", str, s.Write_args(args))
     s.svg_string += path_str
 }
 

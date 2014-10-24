@@ -13,7 +13,7 @@ var hash = utils.Hash("Happy Diwali")
 
 func Start() string {
     generate_background()
-    geo_hexagons()
+    geo_triangles()
 
     return Svg.Str()
 }
@@ -24,6 +24,88 @@ func generate_background() {
 
     Svg.Rect(0, 0, "100%", "100%", args)
 }
+
+func geo_triangles() {
+    scale := utils.Hex_val(hash, 0, 1)
+    side_length := utils.Map(scale, 0, 15, 15, 80)
+    triangle_height := side_length/2 * math.Sqrt(3)
+    triangle := shapes.Build_triangle(side_length, triangle_height)
+
+    Svg.Set_height(int(triangle_height * 6))
+    Svg.Set_width(int(side_length * 3))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+
+            var rotation int
+            if y % 2 == 0 {
+                if x % 2 == 0 {
+                    rotation = 180
+                }
+            } else {
+                if x % 2 != 0 {
+                    rotation = 180
+                }
+            }
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(%v, %v, %v)", float64(x) * side_length * 0.5 - side_length / 2, triangle_height * float64(y), rotation, side_length / 2, triangle_height / 2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+
+            if x == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(%v, %v, %v)", 6 * side_length * 0.5 - side_length / 2, triangle_height * float64(y), rotation, side_length / 2, triangle_height / 2)
+                Svg.Polyline(triangle, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
+}
+
+/*
+func geo_sine_waves() {
+    period := int(utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 100, 400))
+    amplitude := int(utils.Map(utils.Hex_val(hash, 1, 1), 0, 15, 30, 100))
+    wave_width := int(utils.Map(utils.Hex_val(hash, 2, 1), 0, 15, 3, 30))
+
+    Svg.Set_height((period))
+    Svg.Set_width((wave_width * 36))
+
+    for i := 0; i <= 35; i++ {
+        val := utils.Hex_val(hash, i, 1)
+        opacity := utils.Opacity(val)
+        fill := utils.Fill_color(val)
+        x_offset := period/4 * 0.7
+
+        styles := make(map[string]interface{})
+        styles["fill"] = "none"
+        styles["stroke"] = fill
+        styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", wave_width)}
+
+        str := fmt.Sprintf("M0 %v C %v 0, %v 0, %v %v S %v %v, %v %v S %v 0, %v, %v", amplitude, x_offset, period / 2 - x_offset, period / 2, amplitude, period - x_offset, amplitude * 2, period, amplitude, period * 1.5 - x_offset, period * 1.5, amplitude)
+
+        style := make(map[string]interface{})
+
+        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * (i)) - (amplitude * 1.5))
+        Svg.Path(str, utils.Merge(styles, style))
+
+        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * (i)) - (amplitude * 1.5) + wave_width * 36)
+        Svg.Path(str, utils.Merge(styles, style))
+    }
+}
+*/
 
 func geo_hexagons() {
     scale := utils.Hex_val(hash, 0, 1)
