@@ -9,18 +9,18 @@ import (
 )
 
 var Svg = new(svg.SVG)
-var hash = utils.Hash("Happy Diwali")
+var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_diamonds()
+    geo_sine_waves()
 
     return Svg.Str()
 }
 
 func generate_background() {
     args := make(map[string]interface{})
-    args["fill"] = "rgb(120, 160, 200)"
+    args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
 }
@@ -126,20 +126,19 @@ func geo_triangles() {
     }
 }
 
-/*
 func geo_sine_waves() {
-    period := int(utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 100, 400))
-    amplitude := int(utils.Map(utils.Hex_val(hash, 1, 1), 0, 15, 30, 100))
-    wave_width := int(utils.Map(utils.Hex_val(hash, 2, 1), 0, 15, 3, 30))
+    period := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 100, 400)
+    amplitude := utils.Map(utils.Hex_val(hash, 1, 1), 0, 15, 30, 100)
+    wave_width := utils.Map(utils.Hex_val(hash, 2, 1), 0, 15, 3, 30)
 
-    Svg.Set_height((period))
-    Svg.Set_width((wave_width * 36))
+    Svg.Set_height(int(wave_width * 36))
+    Svg.Set_width(int(period))
 
     for i := 0; i <= 35; i++ {
         val := utils.Hex_val(hash, i, 1)
         opacity := utils.Opacity(val)
         fill := utils.Fill_color(val)
-        x_offset := period/4 * 0.7
+        x_offset := (period/4) * 0.7
 
         styles := make(map[string]interface{})
         styles["fill"] = "none"
@@ -150,14 +149,13 @@ func geo_sine_waves() {
 
         style := make(map[string]interface{})
 
-        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * (i)) - (amplitude * 1.5))
+        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * float64(i)) - (amplitude * 1.5))
         Svg.Path(str, utils.Merge(styles, style))
 
-        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * (i)) - (amplitude * 1.5) + wave_width * 36)
+        style["transform"] = fmt.Sprintf("translate(-%v, %v)", period / 4, (wave_width * float64(i)) - (amplitude * 1.5) + wave_width * 36)
         Svg.Path(str, utils.Merge(styles, style))
     }
 }
-*/
 
 func geo_hexagons() {
     scale := utils.Hex_val(hash, 0, 1)
