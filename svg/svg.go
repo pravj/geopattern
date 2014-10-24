@@ -52,6 +52,12 @@ func (s *SVG) Polyline(str string, args map[string]interface{}) {
     s.svg_string += polyline_str
 }
 
+func (s *SVG) Group(elements [2]string, args map[string]interface{}) {
+    s.svg_string += fmt.Sprintf("<g %s>", s.Write_args(args))
+    s.svg_string += elements[0] + elements[1]
+    s.svg_string += "</g>"
+}
+
 func (s *SVG) Write_args(args map[string]interface{}) string {
     str := ""
 

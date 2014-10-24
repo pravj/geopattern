@@ -13,7 +13,7 @@ var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_sine_waves()
+    geo_chevrons()
 
     return Svg.Str()
 }
@@ -23,6 +23,44 @@ func generate_background() {
     args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_chevrons() {
+    chevron_width := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 30, 80)
+    chevron_height := chevron_width
+    chevron := shapes.Build_chevron(chevron_width, chevron_height)
+
+    Svg.Set_height(int(chevron_height * 6 * 0.66))
+    Svg.Set_width(int(chevron_width * 6))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["fill-opacity"] = opacity
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+            styles["stroke-width"] = 1
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * chevron_width, float64(y) * chevron_height * 0.66 - chevron_height/2)
+            Svg.Group(chevron, utils.Merge(styles, style))
+
+            if y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x) * chevron_width, 6 * chevron_height * 0.66 - chevron_height/2)
+                Svg.Group(chevron, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_diamonds() {

@@ -39,3 +39,13 @@ func Build_hexagon(side_length float64) string {
 
     return fmt.Sprintf("0,%v,%v,0,%v,0,%v,%v,%v,%v,%v,%v,0,%v", b, a, a + c, 2 * c, b, a + c, 2 * b, a, 2 * b, b)
 }
+
+func Build_chevron(width, height float64) [2]string {
+    e := height * 0.66
+    var elements [2]string
+
+    elements[0] = fmt.Sprintf("<polyline points='0,0,%v,%v,%v,%v,0,%v,0,0' />", width/2, height-e, width/2, height, e)
+    elements[1] = fmt.Sprintf("<polyline points='%v,%v,%v,0,%v,%v,%v,%v,%v,%v' />", width/2, height-e, width, width, e, width/2, height, width/2, height-e)
+
+    return elements
+}
