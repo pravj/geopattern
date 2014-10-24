@@ -13,7 +13,7 @@ var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_plus_signs()
+    geo_xes()
 
     return Svg.Str()
 }
@@ -23,6 +23,69 @@ func generate_background() {
     args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_xes() {
+    square_size := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 10, 25)
+    x_shape := shapes.Build_plus(square_size)
+    x_size := square_size * 3 * 0.943
+
+    Svg.Set_height(int(x_size * 3))
+    Svg.Set_width(int(x_size * 3))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            var dy float64
+            if x % 2 == 0 {
+                dy = float64(y)*x_size - x_size*0.5
+            } else {
+                dy = float64(y)*x_size - x_size*0.5 + x_size/4
+            }
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity)}
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2 - x_size/2, dy - float64(y)*x_size/2, x_size/2, x_size/2)
+            Svg.Group(x_shape, utils.Merge(styles, style))
+
+            if x == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2 - x_size/2, dy - float64(y)*x_size/2, x_size/2, x_size/2)
+                Svg.Group(x_shape, utils.Merge(styles, style))
+            }
+
+            if y == 0 {
+                if x % 2 == 0 {
+                    dy = 6*x_size - x_size/2
+                } else {
+                    dy = 6*x_size - x_size/2 + x_size/4
+                }
+
+                style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2 - x_size/2, dy - float64(y)*x_size/2, x_size/2, x_size/2)
+                Svg.Group(x_shape, utils.Merge(styles, style))
+            }
+
+            if y == 5 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2 - x_size/2, dy - 11*x_size/2, x_size/2, x_size/2)
+                Svg.Group(x_shape, utils.Merge(styles, style))
+            }
+
+            if x == 0 && y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2 - x_size/2, dy - 6*x_size/2, x_size/2, x_size/2)
+                Svg.Group(x_shape, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_plus_signs() {
