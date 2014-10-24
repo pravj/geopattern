@@ -49,3 +49,12 @@ func Build_chevron(width, height float64) [2]string {
 
     return elements
 }
+
+func Build_plus(square_size float64) [2]string {
+    var elements [2]string
+
+    elements[0] = fmt.Sprintf("<rect x='%v' y='0' width='%v' height='%v' />", square_size, square_size, square_size * 3)
+    elements[1] = fmt.Sprintf("<rect x='0' y='%v' width='%v' height='%v' />", square_size, square_size * 3, square_size)
+
+    return elements
+}

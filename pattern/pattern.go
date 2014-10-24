@@ -13,7 +13,7 @@ var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_chevrons()
+    geo_plus_signs()
 
     return Svg.Str()
 }
@@ -23,6 +23,58 @@ func generate_background() {
     args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_plus_signs() {
+    square_size := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 10, 25)
+    plus_size := square_size * 3
+    plus_shape := shapes.Build_plus(square_size)
+
+    Svg.Set_height(int(square_size * 12))
+    Svg.Set_width(int(square_size * 12))
+
+    i := 0
+    for y := 0; y <= 5; y++ {
+        for x := 0; x <= 5; x++ {
+
+            val := utils.Hex_val(hash, i, 1)
+            opacity := utils.Opacity(val)
+            fill := utils.Fill_color(val)
+
+            var dx float64
+            if y % 2 != 0 {
+                dx = 1
+            }
+
+            styles := make(map[string]interface{})
+            styles["fill"] = fill
+            styles["stroke"] = utils.STROKE_COLOR
+            styles["stroke-opacity"] = utils.STROKE_OPACITY
+            styles["style"] = map[string]string{"fill-opacity": fmt.Sprintf("%v", opacity)}
+
+            style := make(map[string]interface{})
+
+            style["transform"] = fmt.Sprintf("translate(%v,%v)", float64(x)*(plus_size - square_size) + dx*square_size - square_size, float64(y) * (plus_size - square_size) - plus_size/2)
+            Svg.Group(plus_shape, utils.Merge(styles, style))
+
+            if x == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v,%v)", 4*plus_size - float64(x)*square_size + dx*square_size - square_size, float64(y) * (plus_size - square_size) - plus_size/2)
+                Svg.Group(plus_shape, utils.Merge(styles, style))
+            }
+
+            if y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v,%v)", float64(x)*(plus_size - square_size) + dx*square_size - square_size, 4*(plus_size) - float64(y)*square_size - plus_size/2)
+                Svg.Group(plus_shape, utils.Merge(styles, style))
+            }
+
+            if x == 0 && y == 0 {
+                style["transform"] = fmt.Sprintf("translate(%v,%v)", 4*plus_size - float64(x)*square_size + dx*square_size - square_size, 4*plus_size - float64(y)*square_size - plus_size/2)
+                Svg.Group(plus_shape, utils.Merge(styles, style))
+            }
+
+            i = i + 1
+        }
+    }
 }
 
 func geo_chevrons() {
