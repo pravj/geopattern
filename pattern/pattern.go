@@ -1,11 +1,11 @@
 package pattern
 
 import (
-	//"fmt"
+	"fmt"
+	//"math"
 	//"github.com/pravj/geo_pattern/shapes"
 	"github.com/pravj/geo_pattern/svg"
 	"github.com/pravj/geo_pattern/utils"
-	//"math"
 )
 
 type Pattern struct {
@@ -17,9 +17,9 @@ func New(phrase string) *Pattern {
 	return &Pattern{Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
 }
 
-func (p *Pattern) Start() string {
+func (p *Pattern) Svg_str() string {
 	p.generate_background()
-	p.geo_squares()
+	p.geo_overlapping_circles()
 
 	return p.Svg.Str()
 }
@@ -709,20 +709,20 @@ func geo_octagons() {
 		}
 	}
 }
-
-func geo_overlapping_circles() {
-	scale := utils.Hex_val(Hash, 0, 1)
+*/
+func (p *Pattern) geo_overlapping_circles() {
+	scale := utils.Hex_val(p.Hash, 0, 1)
 	diameter := utils.Map(scale, 0, 15, 25, 200)
 	radius := diameter / 2
 
-	Svg.Set_height(int(radius * 6))
-	Svg.Set_width(int(radius * 6))
+	p.Svg.Set_height(int(radius * 6))
+	p.Svg.Set_width(int(radius * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -730,25 +730,25 @@ func geo_overlapping_circles() {
 			styles["fill"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity)}
 
-			Svg.Circle(float64(x)*radius, float64(y)*radius, radius, styles)
+			p.Svg.Circle(float64(x)*radius, float64(y)*radius, radius, styles)
 
 			if x == 0 {
-				Svg.Circle(6*radius, float64(y)*radius, radius, styles)
+				p.Svg.Circle(6*radius, float64(y)*radius, radius, styles)
 			}
 
 			if y == 0 {
-				Svg.Circle(float64(x)*radius, 6*radius, radius, styles)
+				p.Svg.Circle(float64(x)*radius, 6*radius, radius, styles)
 			}
 
 			if x == 0 && y == 0 {
-				Svg.Circle(6*radius, 6*radius, radius, styles)
+				p.Svg.Circle(6*radius, 6*radius, radius, styles)
 			}
 
 			i = i + 1
 		}
 	}
 }
-*/
+
 func (p *Pattern) geo_squares() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 60)
 
