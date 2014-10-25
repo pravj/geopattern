@@ -86,7 +86,7 @@ func Build_right_triangle(side_length float64) string {
     return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", side_length, side_length, side_length)
 }
 
-func Rotated_triangle(side_length, width float64) string {
+func Build_rotated_triangle(side_length, width float64) string {
     half_height := side_length / 2
 
     return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", width, half_height, side_length)

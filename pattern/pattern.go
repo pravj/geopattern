@@ -13,7 +13,7 @@ var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_mosaic_squares()
+    geo_tessellation()
 
     return Svg.Str()
 }
@@ -23,6 +23,101 @@ func generate_background() {
     args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_tessellation() {
+    side_length := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 5, 40)
+    hex_height := side_length * math.Sqrt(3)
+    hex_width := side_length * 2
+    triangle_height := side_length/2 * math.Sqrt(3)
+    triangle := shapes.Build_rotated_triangle(side_length, triangle_height)
+    tile_width := side_length*3 + triangle_height*2
+    tile_height := (hex_height * 2) + (side_length * 2)
+
+    Svg.Set_height(int(tile_height))
+    Svg.Set_width(int(tile_width))
+
+    for i := 0; i <= 19; i++ {
+        val := utils.Hex_val(hash, i, 1)
+        opacity := utils.Opacity(val)
+        fill := utils.Fill_color(val)
+
+        styles := make(map[string]interface{})
+        styles["fill"] = fill
+        styles["fill-opacity"] = opacity
+        styles["stroke"] = utils.STROKE_COLOR
+        styles["stroke-opacity"] = utils.STROKE_OPACITY
+        styles["stroke-width"] = 1
+
+        style := make(map[string]interface{})
+
+        switch i {
+        case 0:
+            Svg.Rect(-side_length/2, -side_length/2, side_length, side_length, styles)
+            Svg.Rect(tile_width - side_length/2, -side_length/2, side_length, side_length, styles)
+            Svg.Rect(-side_length/2, tile_height-side_length/2, side_length, side_length, styles)
+            Svg.Rect(tile_width - side_length/2, tile_height-side_length/2, side_length, side_length, styles)
+        case 1:
+            Svg.Rect(hex_width/2 + triangle_height, hex_height/2, side_length, side_length, styles)
+        case 2:
+            Svg.Rect(-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
+            Svg.Rect(tile_width-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
+        case 3:
+            Svg.Rect(hex_width/2 + triangle_height, hex_height * 1.5 + side_length, side_length, side_length, styles)
+        case 4:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v)", side_length/2, -side_length/2, side_length/2, triangle_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(1, -1)", side_length/2, tile_height-(-side_length/2), side_length/2, triangle_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 5:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(-1, 1)", tile_width-side_length/2, -side_length/2, side_length/2, triangle_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(-1, -1)", tile_width-side_length/2, tile_height+side_length/2, side_length/2, triangle_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 6:
+            style["transform"] = fmt.Sprintf("translate(%v, %v)", tile_width/2+side_length/2, hex_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 7:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", tile_width-tile_width/2-side_length/2, hex_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 8:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", tile_width/2+side_length/2, tile_height-hex_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 9:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", tile_width-tile_width/2-side_length/2, tile_height-hex_height/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 10:
+            style["transform"] = fmt.Sprintf("translate(%v, %v)", side_length/2, tile_height/2 - side_length/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 11:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", tile_width-side_length/2, tile_height/2-side_length/2)
+            Svg.Polyline(triangle, utils.Merge(styles, style))
+        case 12:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(-30, 0, 0)", side_length/2, side_length/2)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 13:
+            style["transform"] = fmt.Sprintf("scale(-1, 1) translate(%v, %v) rotate(-30, 0, 0)", -tile_width+side_length/2, side_length/2)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 14:
+            style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(30, 0, %v)", side_length/2, tile_height/2-side_length/2-side_length, side_length)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 15:
+            style["transform"] = fmt.Sprintf("scale(-1, 1) translate(%v, %v) rotate(30, 0, %v)", -tile_width+side_length/2, tile_height/2-side_length/2-side_length, side_length)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 16:
+            style["transform"] = fmt.Sprintf("scale(1, -1) translate(%v, %v) rotate(30, 0, %v)", side_length/2, -tile_height+tile_height/2-side_length/2-side_length, side_length)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 17:
+            style["transform"] = fmt.Sprintf("scale(-1, -1) translate(%v, %v) rotate(30, 0, %v)", -tile_width+side_length/2, -tile_height+tile_height/2-side_length/2-side_length, side_length)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 18:
+            style["transform"] = fmt.Sprintf("scale(1, -1) translate(%v, %v) rotate(-30, 0, 0)", side_length/2, -tile_height+side_length/2)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        case 19:
+            style["transform"] = fmt.Sprintf("scale(-1, -1) translate(%v, %v) rotate(-30, 0, 0)", -tile_width+side_length/2, -tile_height+side_length/2)
+            Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+        }
+    }
 }
 
 func geo_mosaic_squares() {
