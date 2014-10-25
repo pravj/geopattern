@@ -3,7 +3,67 @@ package shapes
 import (
     "fmt"
     "math"
+    "github.com/pravj/geo_pattern/svg"
+    "github.com/pravj/geo_pattern/utils"
 )
+
+func Draw_inner_mosaic_tile(s *svg.SVG, x, y, triangle_size float64, values [2]float64) {
+    triangle := Build_right_triangle(triangle_size)
+    opacity := utils.Opacity(values[0])
+    fill := utils.Fill_color(values[0])
+
+    styles := make(map[string]interface{})
+    styles["fill"] = fill
+    styles["fill-opacity"] = opacity
+    styles["stroke"] = utils.STROKE_COLOR
+    styles["stroke-opacity"] = utils.STROKE_OPACITY
+
+    style := make(map[string]interface{})
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x + triangle_size, y)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x + triangle_size, y + triangle_size * 2)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    opacity = utils.Opacity(values[1])
+    fill = utils.Fill_color(values[1])
+
+    styles["fill"] = fill
+    styles["fill-opacity"] = opacity
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x + triangle_size, y + triangle_size * 2)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x + triangle_size, y)
+    s.Polyline(triangle, utils.Merge(styles, style))
+}
+
+func Draw_outer_mosaic_tile(s *svg.SVG, x, y, triangle_size, value float64) {
+    opacity := utils.Opacity(value)
+    fill := utils.Fill_color(value)
+    triangle := Build_right_triangle(triangle_size)
+
+    styles := make(map[string]interface{})
+    styles["fill"] = fill
+    styles["fill-opacity"] = opacity
+    styles["stroke"] = utils.STROKE_COLOR
+    styles["stroke-opacity"] = utils.STROKE_OPACITY
+
+    style := make(map[string]interface{})
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x, y + triangle_size)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x + triangle_size * 2, y + triangle_size)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x, y + triangle_size)
+    s.Polyline(triangle, utils.Merge(styles, style))
+
+    style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x + triangle_size * 2, y + triangle_size)
+    s.Polyline(triangle, utils.Merge(styles, style))
+}
 
 func Build_octagon(square_size float64) string {
     s := square_size

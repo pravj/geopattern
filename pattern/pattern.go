@@ -13,7 +13,7 @@ var hash = utils.Hash("gunnu")
 
 func Start() string {
     generate_background()
-    geo_xes()
+    geo_mosaic_squares()
 
     return Svg.Str()
 }
@@ -23,6 +23,38 @@ func generate_background() {
     args["fill"] = "rgb(50, 74, 157)"
 
     Svg.Rect(0, 0, "100%", "100%", args)
+}
+
+func geo_mosaic_squares() {
+    triangle_size := utils.Map(utils.Hex_val(hash, 0, 1), 0, 15, 15, 50)
+
+    Svg.Set_height(int(triangle_size * 8))
+    Svg.Set_width(int(triangle_size * 8))
+
+    i := 0
+    for y := 0; y <= 3; y++ {
+        for x := 0; x <= 3; x++ {
+
+            values := [2]float64{utils.Hex_val(hash, i, 1), utils.Hex_val(hash, i + 1, 1)}
+
+            if x % 2 == 0 {
+                if y % 2 == 0 {
+                    shapes.Draw_outer_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(hash, i, 1))
+                } else {
+                    shapes.Draw_inner_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
+                }
+            } else {
+                if y % 2 == 0 {
+                    shapes.Draw_inner_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
+                } else {
+                    shapes.Draw_outer_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(hash, i, 1))
+                }
+            }
+
+            i = i + 1
+        }
+    }
+
 }
 
 func geo_xes() {
