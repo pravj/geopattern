@@ -135,8 +135,6 @@ func (p *Pattern) generate_pattern() {
 		}
 	}
 
-        fmt.Println(p.Generator)
-
 	switch p.Generator {
 	case "chevrons":
 		p.geo_chevrons()
