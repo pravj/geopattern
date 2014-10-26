@@ -28,7 +28,7 @@ var PATTERNS = [16]string{
 	"plus_signs",
 	"sine_waves",
 	"squares",
-	"tesselattion",
+	"tessellation",
 	"triangles",
 	"xes",
 }
@@ -87,7 +87,7 @@ func (p *Pattern) generate_background() {
 		rgb, _ = colorful.Hex(p.Color)
 	} else {
 		hue_offset := utils.Map(utils.Hex_val(p.Hash, 14, 3), 0, 4095, 0, 359)
-		sat_offset := int(utils.Hex_val(p.Hash, 17, 1))
+		sat_offset := utils.Map(utils.Hex_val(p.Hash, 17, 1), 0, 15, -1, 1)
 
 		if p.Base_color == "" {
 			color, _ = colorful.Hex(utils.BASE_COLOR)
@@ -95,19 +95,19 @@ func (p *Pattern) generate_background() {
 			color, _ = colorful.Hex(p.Base_color)
 		}
 
-		h, s, v := color.Hsv()
+		h, c, l := color.Hcl()
 
 		h -= hue_offset
-		if sat_offset%2 == 0 {
-			s += float64(sat_offset)
+		if sat_offset >= 0 {
+			c += float64(sat_offset)
 		} else {
-			s -= float64(sat_offset)
+			c -= float64(sat_offset)
 		}
 
-		rgb = colorful.Color{h, s, v}
+		rgb = colorful.Color{h, c, l}
 	}
 
-	r, g, b := int(rgb.R*255), int(rgb.G*255), int(rgb.B*255)
+	r, g, b := int(rgb.R/2), int(rgb.G*105), int(rgb.B*150)
 
 	args := make(map[string]interface{})
 	args["fill"] = fmt.Sprintf("rgb(%v, %v, %v)", r, g, b)
@@ -134,6 +134,8 @@ func (p *Pattern) generate_pattern() {
 			panic("Error: the requested generator is invalid.")
 		}
 	}
+
+        fmt.Println(p.Generator)
 
 	switch p.Generator {
 	case "chevrons":
@@ -215,8 +217,6 @@ func (p *Pattern) geo_concentric_circles() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	ring_size := utils.Map(scale, 0, 15, 10, 60)
 	stroke_width := ring_size / 5
-
-	fmt.Println((ring_size + stroke_width) * 6)
 
 	p.Svg.Set_height(int((ring_size + stroke_width) * 6))
 	p.Svg.Set_width(int((ring_size + stroke_width) * 6))
