@@ -2,6 +2,7 @@ package pattern
 
 import (
 	"fmt"
+	"github.com/lucasb-eyer/go-colorful"
 	"github.com/pravj/geo_pattern/shapes"
 	"github.com/pravj/geo_pattern/svg"
 	"github.com/pravj/geo_pattern/utils"
@@ -29,13 +30,15 @@ var PATTERNS = [16]string{
 }
 
 type Pattern struct {
-	Generator string
-	Hash      string
-	Svg       *svg.SVG
+	Base_color string
+	Color      string
+	Generator  string
+	Hash       string
+	Svg        *svg.SVG
 }
 
 func New(args map[string]string) *Pattern {
-	var phrase, generator string
+	var phrase, generator, color, base_color string
 
 	phrase = fmt.Sprintf("%s", time.Now().Local())
 
@@ -47,7 +50,15 @@ func New(args map[string]string) *Pattern {
 		generator = args["generator"]
 	}
 
-	return &Pattern{Generator: generator, Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
+	if args["color"] != "" {
+		color = args["color"]
+	}
+
+	if args["base_color"] != "" {
+		base_color = args["base_color"]
+	}
+
+	return &Pattern{Base_color: base_color, Color: color, Generator: generator, Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
 }
 
 func (p *Pattern) Svg_str() string {
@@ -58,8 +69,36 @@ func (p *Pattern) Svg_str() string {
 }
 
 func (p *Pattern) generate_background() {
+	var rgb, color colorful.Color
+
+	if p.Color != "" {
+		rgb, _ = colorful.Hex(p.Color)
+	} else {
+		hue_offset := utils.Map(utils.Hex_val(p.Hash, 14, 3), 0, 4095, 0, 359)
+		sat_offset := int(utils.Hex_val(p.Hash, 17, 1))
+
+		if p.Base_color == "" {
+			color, _ = colorful.Hex(utils.BASE_COLOR)
+		} else {
+			color, _ = colorful.Hex(p.Base_color)
+		}
+
+		h, s, v := color.Hsv()
+
+		h -= hue_offset
+		if sat_offset%2 == 0 {
+			s += float64(sat_offset)
+		} else {
+			s -= float64(sat_offset)
+		}
+
+		rgb = colorful.Color{h, s, v}
+	}
+
+	r, g, b := int(rgb.R*255), int(rgb.G*255), int(rgb.B*255)
+
 	args := make(map[string]interface{})
-	args["fill"] = "rgb(50, 74, 157)"
+	args["fill"] = fmt.Sprintf("rgb(%v, %v, %v)", r, g, b)
 
 	p.Svg.Rect(0, 0, "100%", "100%", args)
 }

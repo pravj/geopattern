@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	BASE_COLOR       string  = "#933c3c"
 	STROKE_COLOR     string  = "#000"
 	STROKE_OPACITY   float64 = 0.02
 	FILL_COLOR_DARK  string  = "#222"
