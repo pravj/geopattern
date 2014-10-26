@@ -2,24 +2,57 @@ package pattern
 
 import (
 	"fmt"
-	//"math"
-	//"github.com/pravj/geo_pattern/shapes"
+	"github.com/pravj/geo_pattern/shapes"
 	"github.com/pravj/geo_pattern/svg"
 	"github.com/pravj/geo_pattern/utils"
+	"math"
+	"time"
 )
 
-type Pattern struct {
-	Hash string
-	Svg  *svg.SVG
+var PATTERNS = [16]string{
+	"octagons",
+	"overlapping_circles",
+	"plus_signs",
+	"xes",
+	"sine_waves",
+	"hexagons",
+	"overlapping_rings",
+	"plaid",
+	"triangles",
+	"squares",
+	"concentric_circles",
+	"diamonds",
+	"tesselattion",
+	"nested_squares",
+	"mosaic_squares",
+	"chevrons",
 }
 
-func New(phrase string) *Pattern {
-	return &Pattern{Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
+type Pattern struct {
+	Generator string
+	Hash      string
+	Svg       *svg.SVG
+}
+
+func New(args map[string]string) *Pattern {
+	var phrase, generator string
+
+	phrase = fmt.Sprintf("%s", time.Now().Local())
+
+	if args["phrase"] != "" {
+		phrase = args["phrase"]
+	}
+
+	if args["generator"] != "" {
+		generator = args["generator"]
+	}
+
+	return &Pattern{Generator: generator, Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
 }
 
 func (p *Pattern) Svg_str() string {
 	p.generate_background()
-	p.geo_overlapping_circles()
+	p.generate_pattern()
 
 	return p.Svg.Str()
 }
@@ -31,9 +64,62 @@ func (p *Pattern) generate_background() {
 	p.Svg.Rect(0, 0, "100%", "100%", args)
 }
 
-/*
-func geo_tessellation() {
-	side_length := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 5, 40)
+func is_pattern(generator string) bool {
+	for _, ptn := range PATTERNS {
+		if ptn == generator {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Pattern) generate_pattern() {
+	if p.Generator == "" {
+		p.Generator = PATTERNS[int(utils.Hex_val(p.Hash, 20, 1))]
+	} else {
+		if !is_pattern(p.Generator) {
+			panic("Error: the requested generator is invalid.")
+		}
+	}
+
+	switch p.Generator {
+	case "octagons":
+		p.geo_octagons()
+	case "overlapping_circles":
+		p.geo_overlapping_circles()
+	case "plus_signs":
+		p.geo_plus_signs()
+	case "xes":
+		p.geo_xes()
+	case "sine_waves":
+		p.geo_sine_waves()
+	case "hexagons":
+		p.geo_hexagons()
+	case "overlapping_rings":
+		p.geo_overlapping_rings()
+	case "plaid":
+		p.geo_plaid()
+	case "triangles":
+		p.geo_triangles()
+	case "squares":
+		p.geo_squares()
+	case "concentric_circles":
+		p.geo_concentric_circles()
+	case "diamonds":
+		p.geo_diamonds()
+	case "tessellation":
+		p.geo_tessellation()
+	case "nested_squares":
+		p.geo_nested_squares()
+	case "mosaic_squares":
+		p.geo_mosaic_squares()
+	case "chevrons":
+		p.geo_chevrons()
+	}
+}
+
+func (p *Pattern) geo_tessellation() {
+	side_length := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 5, 40)
 	hex_height := side_length * math.Sqrt(3)
 	hex_width := side_length * 2
 	triangle_height := side_length / 2 * math.Sqrt(3)
@@ -41,11 +127,11 @@ func geo_tessellation() {
 	tile_width := side_length*3 + triangle_height*2
 	tile_height := (hex_height * 2) + (side_length * 2)
 
-	Svg.Set_height(int(tile_height))
-	Svg.Set_width(int(tile_width))
+	p.Svg.Set_height(int(tile_height))
+	p.Svg.Set_width(int(tile_width))
 
 	for i := 0; i <= 19; i++ {
-		val := utils.Hex_val(Hash, i, 1)
+		val := utils.Hex_val(p.Hash, i, 1)
 		opacity := utils.Opacity(val)
 		fill := utils.Fill_color(val)
 
@@ -60,97 +146,96 @@ func geo_tessellation() {
 
 		switch i {
 		case 0:
-			Svg.Rect(-side_length/2, -side_length/2, side_length, side_length, styles)
-			Svg.Rect(tile_width-side_length/2, -side_length/2, side_length, side_length, styles)
-			Svg.Rect(-side_length/2, tile_height-side_length/2, side_length, side_length, styles)
-			Svg.Rect(tile_width-side_length/2, tile_height-side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(-side_length/2, -side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(tile_width-side_length/2, -side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(-side_length/2, tile_height-side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(tile_width-side_length/2, tile_height-side_length/2, side_length, side_length, styles)
 		case 1:
-			Svg.Rect(hex_width/2+triangle_height, hex_height/2, side_length, side_length, styles)
+			p.Svg.Rect(hex_width/2+triangle_height, hex_height/2, side_length, side_length, styles)
 		case 2:
-			Svg.Rect(-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
-			Svg.Rect(tile_width-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
+			p.Svg.Rect(tile_width-side_length/2, tile_height/2-side_length/2, side_length, side_length, styles)
 		case 3:
-			Svg.Rect(hex_width/2+triangle_height, hex_height*1.5+side_length, side_length, side_length, styles)
+			p.Svg.Rect(hex_width/2+triangle_height, hex_height*1.5+side_length, side_length, side_length, styles)
 		case 4:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v)", side_length/2, -side_length/2, side_length/2, triangle_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(1, -1)", side_length/2, tile_height-(-side_length/2), side_length/2, triangle_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 5:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(-1, 1)", tile_width-side_length/2, -side_length/2, side_length/2, triangle_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(0, %v, %v) scale(-1, -1)", tile_width-side_length/2, tile_height+side_length/2, side_length/2, triangle_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 6:
 			style["transform"] = fmt.Sprintf("translate(%v, %v)", tile_width/2+side_length/2, hex_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 7:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", tile_width-tile_width/2-side_length/2, hex_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 8:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", tile_width/2+side_length/2, tile_height-hex_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 9:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", tile_width-tile_width/2-side_length/2, tile_height-hex_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 10:
 			style["transform"] = fmt.Sprintf("translate(%v, %v)", side_length/2, tile_height/2-side_length/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 11:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", tile_width-side_length/2, tile_height/2-side_length/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 		case 12:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(-30, 0, 0)", side_length/2, side_length/2)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 13:
 			style["transform"] = fmt.Sprintf("scale(-1, 1) translate(%v, %v) rotate(-30, 0, 0)", -tile_width+side_length/2, side_length/2)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 14:
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(30, 0, %v)", side_length/2, tile_height/2-side_length/2-side_length, side_length)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 15:
 			style["transform"] = fmt.Sprintf("scale(-1, 1) translate(%v, %v) rotate(30, 0, %v)", -tile_width+side_length/2, tile_height/2-side_length/2-side_length, side_length)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 16:
 			style["transform"] = fmt.Sprintf("scale(1, -1) translate(%v, %v) rotate(30, 0, %v)", side_length/2, -tile_height+tile_height/2-side_length/2-side_length, side_length)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 17:
 			style["transform"] = fmt.Sprintf("scale(-1, -1) translate(%v, %v) rotate(30, 0, %v)", -tile_width+side_length/2, -tile_height+tile_height/2-side_length/2-side_length, side_length)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 18:
 			style["transform"] = fmt.Sprintf("scale(1, -1) translate(%v, %v) rotate(-30, 0, 0)", side_length/2, -tile_height+side_length/2)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		case 19:
 			style["transform"] = fmt.Sprintf("scale(-1, -1) translate(%v, %v) rotate(-30, 0, 0)", -tile_width+side_length/2, -tile_height+side_length/2)
-			Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
+			p.Svg.Rect(0, 0, side_length, side_length, utils.Merge(styles, style))
 		}
 	}
 }
-*/
-/*
-func geo_mosaic_squares() {
-	triangle_size := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 15, 50)
 
-	Svg.Set_height(int(triangle_size * 8))
-	Svg.Set_width(int(triangle_size * 8))
+func (p *Pattern) geo_mosaic_squares() {
+	triangle_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 15, 50)
+
+	p.Svg.Set_height(int(triangle_size * 8))
+	p.Svg.Set_width(int(triangle_size * 8))
 
 	i := 0
 	for y := 0; y <= 3; y++ {
 		for x := 0; x <= 3; x++ {
 
-			values := [2]float64{utils.Hex_val(Hash, i, 1), utils.Hex_val(Hash, i+1, 1)}
+			values := [2]float64{utils.Hex_val(p.Hash, i, 1), utils.Hex_val(p.Hash, i+1, 1)}
 
 			if x%2 == 0 {
 				if y%2 == 0 {
-					shapes.Draw_outer_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(Hash, i, 1))
+					shapes.Draw_outer_mosaic_tile(p.Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(p.Hash, i, 1))
 				} else {
-					shapes.Draw_inner_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
+					shapes.Draw_inner_mosaic_tile(p.Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
 				}
 			} else {
 				if y%2 == 0 {
-					shapes.Draw_inner_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
+					shapes.Draw_inner_mosaic_tile(p.Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, values)
 				} else {
-					shapes.Draw_outer_mosaic_tile(Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(Hash, i, 1))
+					shapes.Draw_outer_mosaic_tile(p.Svg, float64(x)*triangle_size*2, float64(y)*triangle_size*2, triangle_size, utils.Hex_val(p.Hash, i, 1))
 				}
 			}
 
@@ -160,19 +245,19 @@ func geo_mosaic_squares() {
 
 }
 
-func geo_xes() {
-	square_size := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 10, 25)
+func (p *Pattern) geo_xes() {
+	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 25)
 	x_shape := shapes.Build_plus(square_size)
 	x_size := square_size * 3 * 0.943
 
-	Svg.Set_height(int(x_size * 3))
-	Svg.Set_width(int(x_size * 3))
+	p.Svg.Set_height(int(x_size * 3))
+	p.Svg.Set_width(int(x_size * 3))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -190,11 +275,11 @@ func geo_xes() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-			Svg.Group(x_shape, utils.Merge(styles, style))
+			p.Svg.Group(x_shape, utils.Merge(styles, style))
 
 			if x == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-				Svg.Group(x_shape, utils.Merge(styles, style))
+				p.Svg.Group(x_shape, utils.Merge(styles, style))
 			}
 
 			if y == 0 {
@@ -205,17 +290,17 @@ func geo_xes() {
 				}
 
 				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-				Svg.Group(x_shape, utils.Merge(styles, style))
+				p.Svg.Group(x_shape, utils.Merge(styles, style))
 			}
 
 			if y == 5 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-11*x_size/2, x_size/2, x_size/2)
-				Svg.Group(x_shape, utils.Merge(styles, style))
+				p.Svg.Group(x_shape, utils.Merge(styles, style))
 			}
 
 			if x == 0 && y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2-x_size/2, dy-6*x_size/2, x_size/2, x_size/2)
-				Svg.Group(x_shape, utils.Merge(styles, style))
+				p.Svg.Group(x_shape, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -223,19 +308,19 @@ func geo_xes() {
 	}
 }
 
-func geo_plus_signs() {
-	square_size := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 10, 25)
+func (p *Pattern) geo_plus_signs() {
+	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 25)
 	plus_size := square_size * 3
 	plus_shape := shapes.Build_plus(square_size)
 
-	Svg.Set_height(int(square_size * 12))
-	Svg.Set_width(int(square_size * 12))
+	p.Svg.Set_height(int(square_size * 12))
+	p.Svg.Set_width(int(square_size * 12))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -253,21 +338,21 @@ func geo_plus_signs() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v,%v)", float64(x)*(plus_size-square_size)+dx*square_size-square_size, float64(y)*(plus_size-square_size)-plus_size/2)
-			Svg.Group(plus_shape, utils.Merge(styles, style))
+			p.Svg.Group(plus_shape, utils.Merge(styles, style))
 
 			if x == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v,%v)", 4*plus_size-float64(x)*square_size+dx*square_size-square_size, float64(y)*(plus_size-square_size)-plus_size/2)
-				Svg.Group(plus_shape, utils.Merge(styles, style))
+				p.Svg.Group(plus_shape, utils.Merge(styles, style))
 			}
 
 			if y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v,%v)", float64(x)*(plus_size-square_size)+dx*square_size-square_size, 4*(plus_size)-float64(y)*square_size-plus_size/2)
-				Svg.Group(plus_shape, utils.Merge(styles, style))
+				p.Svg.Group(plus_shape, utils.Merge(styles, style))
 			}
 
 			if x == 0 && y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v,%v)", 4*plus_size-float64(x)*square_size+dx*square_size-square_size, 4*plus_size-float64(y)*square_size-plus_size/2)
-				Svg.Group(plus_shape, utils.Merge(styles, style))
+				p.Svg.Group(plus_shape, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -275,19 +360,19 @@ func geo_plus_signs() {
 	}
 }
 
-func geo_chevrons() {
-	chevron_width := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 30, 80)
+func (p *Pattern) geo_chevrons() {
+	chevron_width := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 30, 80)
 	chevron_height := chevron_width
 	chevron := shapes.Build_chevron(chevron_width, chevron_height)
 
-	Svg.Set_height(int(chevron_height * 6 * 0.66))
-	Svg.Set_width(int(chevron_width * 6))
+	p.Svg.Set_height(int(chevron_height * 6 * 0.66))
+	p.Svg.Set_width(int(chevron_width * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -301,11 +386,11 @@ func geo_chevrons() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*chevron_width, float64(y)*chevron_height*0.66-chevron_height/2)
-			Svg.Group(chevron, utils.Merge(styles, style))
+			p.Svg.Group(chevron, utils.Merge(styles, style))
 
 			if y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*chevron_width, 6*chevron_height*0.66-chevron_height/2)
-				Svg.Group(chevron, utils.Merge(styles, style))
+				p.Svg.Group(chevron, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -313,19 +398,19 @@ func geo_chevrons() {
 	}
 }
 
-func geo_diamonds() {
-	diamond_width := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 10, 50)
-	diamond_height := utils.Map(utils.Hex_val(Hash, 1, 1), 0, 15, 10, 50)
+func (p *Pattern) geo_diamonds() {
+	diamond_width := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 50)
+	diamond_height := utils.Map(utils.Hex_val(p.Hash, 1, 1), 0, 15, 10, 50)
 	diamond := shapes.Build_diamond(diamond_width, diamond_height)
 
-	Svg.Set_height(int(diamond_height * 3))
-	Svg.Set_width(int(diamond_width * 6))
+	p.Svg.Set_height(int(diamond_height * 3))
+	p.Svg.Set_width(int(diamond_width * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -343,21 +428,21 @@ func geo_diamonds() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*diamond_width-diamond_width/2+dx, diamond_height/2*float64(y)-diamond_height/2)
-			Svg.Polyline(diamond, utils.Merge(styles, style))
+			p.Svg.Polyline(diamond, utils.Merge(styles, style))
 
 			if x == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*diamond_width-diamond_width/2+dx, diamond_height/2*float64(y)-diamond_height/2)
-				Svg.Polyline(diamond, utils.Merge(styles, style))
+				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 
 			if y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*diamond_width-diamond_width/2+dx, diamond_height/2*6-diamond_height/2)
-				Svg.Polyline(diamond, utils.Merge(styles, style))
+				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 
 			if x == 0 && y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*diamond_width-diamond_width/2+dx, diamond_height/2*6-diamond_height/2)
-				Svg.Polyline(diamond, utils.Merge(styles, style))
+				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -365,20 +450,20 @@ func geo_diamonds() {
 	}
 }
 
-func geo_triangles() {
-	scale := utils.Hex_val(Hash, 0, 1)
+func (p *Pattern) geo_triangles() {
+	scale := utils.Hex_val(p.Hash, 0, 1)
 	side_length := utils.Map(scale, 0, 15, 15, 80)
 	triangle_height := side_length / 2 * math.Sqrt(3)
 	triangle := shapes.Build_triangle(side_length, triangle_height)
 
-	Svg.Set_height(int(triangle_height * 6))
-	Svg.Set_width(int(side_length * 3))
+	p.Svg.Set_height(int(triangle_height * 6))
+	p.Svg.Set_width(int(side_length * 3))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -402,11 +487,11 @@ func geo_triangles() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(%v, %v, %v)", float64(x)*side_length*0.5-side_length/2, triangle_height*float64(y), rotation, side_length/2, triangle_height/2)
-			Svg.Polyline(triangle, utils.Merge(styles, style))
+			p.Svg.Polyline(triangle, utils.Merge(styles, style))
 
 			if x == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(%v, %v, %v)", 6*side_length*0.5-side_length/2, triangle_height*float64(y), rotation, side_length/2, triangle_height/2)
-				Svg.Polyline(triangle, utils.Merge(styles, style))
+				p.Svg.Polyline(triangle, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -414,16 +499,16 @@ func geo_triangles() {
 	}
 }
 
-func geo_sine_waves() {
-	period := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 100, 400)
-	amplitude := utils.Map(utils.Hex_val(Hash, 1, 1), 0, 15, 30, 100)
-	wave_width := utils.Map(utils.Hex_val(Hash, 2, 1), 0, 15, 3, 30)
+func (p *Pattern) geo_sine_waves() {
+	period := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 100, 400)
+	amplitude := utils.Map(utils.Hex_val(p.Hash, 1, 1), 0, 15, 30, 100)
+	wave_width := utils.Map(utils.Hex_val(p.Hash, 2, 1), 0, 15, 3, 30)
 
-	Svg.Set_height(int(wave_width * 36))
-	Svg.Set_width(int(period))
+	p.Svg.Set_height(int(wave_width * 36))
+	p.Svg.Set_width(int(period))
 
 	for i := 0; i <= 35; i++ {
-		val := utils.Hex_val(Hash, i, 1)
+		val := utils.Hex_val(p.Hash, i, 1)
 		opacity := utils.Opacity(val)
 		fill := utils.Fill_color(val)
 		x_offset := (period / 4) * 0.7
@@ -438,28 +523,28 @@ func geo_sine_waves() {
 		style := make(map[string]interface{})
 
 		style["transform"] = fmt.Sprintf("translate(-%v, %v)", period/4, (wave_width*float64(i))-(amplitude*1.5))
-		Svg.Path(str, utils.Merge(styles, style))
+		p.Svg.Path(str, utils.Merge(styles, style))
 
 		style["transform"] = fmt.Sprintf("translate(-%v, %v)", period/4, (wave_width*float64(i))-(amplitude*1.5)+wave_width*36)
-		Svg.Path(str, utils.Merge(styles, style))
+		p.Svg.Path(str, utils.Merge(styles, style))
 	}
 }
 
-func geo_hexagons() {
-	scale := utils.Hex_val(Hash, 0, 1)
+func (p *Pattern) geo_hexagons() {
+	scale := utils.Hex_val(p.Hash, 0, 1)
 	side_length := utils.Map(scale, 0, 15, 8, 60)
 	hex_height := side_length * math.Sqrt(3)
 	hex_width := side_length * 2
 	hex := shapes.Build_hexagon(side_length)
 
-	Svg.Set_height(int(hex_height * 6))
-	Svg.Set_width(int((hex_width * 3) + (side_length * 3)))
+	p.Svg.Set_height(int(hex_height * 6))
+	p.Svg.Set_width(int((hex_width * 3) + (side_length * 3)))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			var dy float64
 			if x%2 == 0 {
 				dy = float64(y) * hex_height
@@ -478,11 +563,11 @@ func geo_hexagons() {
 			style := make(map[string]interface{})
 
 			style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*side_length*1.5-hex_width/2, dy-hex_height/2)
-			Svg.Polyline(hex, utils.Merge(styles, style))
+			p.Svg.Polyline(hex, utils.Merge(styles, style))
 
 			if x == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*side_length*1.5-hex_width/2, dy-hex_height/2)
-				Svg.Polyline(hex, utils.Merge(styles, style))
+				p.Svg.Polyline(hex, utils.Merge(styles, style))
 			}
 
 			if y == 0 {
@@ -492,12 +577,12 @@ func geo_hexagons() {
 					dy = 6*hex_height + hex_height/2
 				}
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*side_length*1.5-hex_width/2, dy-hex_height/2)
-				Svg.Polyline(hex, utils.Merge(styles, style))
+				p.Svg.Polyline(hex, utils.Merge(styles, style))
 			}
 
 			if x == 0 && y == 0 {
 				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*side_length*1.5-hex_width/2, 5*hex_height+hex_height/2)
-				Svg.Polyline(hex, utils.Merge(styles, style))
+				p.Svg.Polyline(hex, utils.Merge(styles, style))
 			}
 
 			i = i + 1
@@ -505,7 +590,7 @@ func geo_hexagons() {
 	}
 }
 
-func geo_plaid() {
+func (p *Pattern) geo_plaid() {
 	height := 0
 	width := 0
 
@@ -513,10 +598,10 @@ func geo_plaid() {
 	j := 0
 	for i <= 18 {
 
-		space := utils.Hex_val(Hash, j, 1)
+		space := utils.Hex_val(p.Hash, j, 1)
 		height = height + int(space) + 5
 
-		val := utils.Hex_val(Hash, j+1, 1)
+		val := utils.Hex_val(p.Hash, j+1, 1)
 		opacity := utils.Opacity(val)
 		fill := utils.Fill_color(val)
 		stripe_height := val + 5
@@ -525,7 +610,7 @@ func geo_plaid() {
 		styles["opacity"] = opacity
 		styles["fill"] = fill
 
-		Svg.Rect(0, height, "100%", stripe_height, styles)
+		p.Svg.Rect(0, height, "100%", stripe_height, styles)
 
 		height = height + int(stripe_height)
 		j = j + 2
@@ -537,10 +622,10 @@ func geo_plaid() {
 	j = 0
 	for i <= 18 {
 
-		space := utils.Hex_val(Hash, j, 1)
+		space := utils.Hex_val(p.Hash, j, 1)
 		width = width + int(space) + 5
 
-		val := utils.Hex_val(Hash, j+1, 1)
+		val := utils.Hex_val(p.Hash, j+1, 1)
 		opacity := utils.Opacity(val)
 		fill := utils.Fill_color(val)
 		stripe_width := val + 5
@@ -549,7 +634,7 @@ func geo_plaid() {
 		styles["opacity"] = opacity
 		styles["fill"] = fill
 
-		Svg.Rect(width, 0, stripe_width, "100%", styles)
+		p.Svg.Rect(width, 0, stripe_width, "100%", styles)
 
 		width = width + int(stripe_width)
 		j = j + 2
@@ -557,22 +642,22 @@ func geo_plaid() {
 		i = i + 1
 	}
 
-	Svg.Set_height(int(height))
-	Svg.Set_width(int(width))
+	p.Svg.Set_height(int(height))
+	p.Svg.Set_width(int(width))
 }
 
-func geo_nested_squares() {
-	block_size := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 4, 12)
+func (p *Pattern) geo_nested_squares() {
+	block_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 4, 12)
 	square_size := block_size * 7
 
-	Svg.Set_height(int((square_size+block_size)*6 + block_size*6))
-	Svg.Set_width(int((square_size+block_size)*6 + block_size*6))
+	p.Svg.Set_height(int((square_size+block_size)*6 + block_size*6))
+	p.Svg.Set_width(int((square_size+block_size)*6 + block_size*6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -581,9 +666,9 @@ func geo_nested_squares() {
 			styles["stroke"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", block_size)}
 
-			Svg.Rect(float64(x)*square_size+float64(x)*block_size*2+block_size/2, float64(y)*square_size+float64(y)*block_size*2+block_size/2, square_size, square_size, styles)
+			p.Svg.Rect(float64(x)*square_size+float64(x)*block_size*2+block_size/2, float64(y)*square_size+float64(y)*block_size*2+block_size/2, square_size, square_size, styles)
 
-			val = utils.Hex_val(Hash, 39-i, 1)
+			val = utils.Hex_val(p.Hash, 39-i, 1)
 			opacity = utils.Opacity(val)
 			fill = utils.Fill_color(val)
 
@@ -592,26 +677,26 @@ func geo_nested_squares() {
 			styles["stroke"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", block_size)}
 
-			Svg.Rect(float64(x)*square_size+float64(x)*block_size*2+block_size/2+block_size*2, float64(y)*square_size+float64(y)*block_size*2+block_size/2+block_size*2, block_size*3, block_size*3, styles)
+			p.Svg.Rect(float64(x)*square_size+float64(x)*block_size*2+block_size/2+block_size*2, float64(y)*square_size+float64(y)*block_size*2+block_size/2+block_size*2, block_size*3, block_size*3, styles)
 
 			i = i + 1
 		}
 	}
 }
 
-func geo_overlapping_rings() {
-	scale := utils.Hex_val(Hash, 0, 1)
+func (p *Pattern) geo_overlapping_rings() {
+	scale := utils.Hex_val(p.Hash, 0, 1)
 	ring_size := utils.Map(scale, 0, 15, 10, 60)
 	stroke_width := ring_size / 4
 
-	Svg.Set_height(int(ring_size * 6))
-	Svg.Set_width(int(ring_size * 6))
+	p.Svg.Set_height(int(ring_size * 6))
+	p.Svg.Set_width(int(ring_size * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -620,18 +705,18 @@ func geo_overlapping_rings() {
 			styles["stroke"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", stroke_width)}
 
-			Svg.Circle(float64(x)*ring_size, float64(y)*ring_size, ring_size-(stroke_width/2), styles)
+			p.Svg.Circle(float64(x)*ring_size, float64(y)*ring_size, ring_size-(stroke_width/2), styles)
 
 			if x == 0 {
-				Svg.Circle(6*ring_size, float64(y)*ring_size, ring_size-(stroke_width/2), styles)
+				p.Svg.Circle(6*ring_size, float64(y)*ring_size, ring_size-(stroke_width/2), styles)
 			}
 
 			if y == 0 {
-				Svg.Circle(float64(x)*ring_size, 6*ring_size, ring_size-(stroke_width/2), styles)
+				p.Svg.Circle(float64(x)*ring_size, 6*ring_size, ring_size-(stroke_width/2), styles)
 			}
 
 			if x == 0 && y == 0 {
-				Svg.Circle(6*ring_size, 6*ring_size, ring_size-(stroke_width/2), styles)
+				p.Svg.Circle(6*ring_size, 6*ring_size, ring_size-(stroke_width/2), styles)
 			}
 
 			i = i + 1
@@ -639,21 +724,21 @@ func geo_overlapping_rings() {
 	}
 }
 
-func geo_concentric_circles() {
-	scale := utils.Hex_val(Hash, 0, 1)
+func (p *Pattern) geo_concentric_circles() {
+	scale := utils.Hex_val(p.Hash, 0, 1)
 	ring_size := utils.Map(scale, 0, 15, 10, 60)
 	stroke_width := ring_size / 5
 
 	fmt.Println((ring_size + stroke_width) * 6)
 
-	Svg.Set_height(int((ring_size + stroke_width) * 6))
-	Svg.Set_width(int((ring_size + stroke_width) * 6))
+	p.Svg.Set_height(int((ring_size + stroke_width) * 6))
+	p.Svg.Set_width(int((ring_size + stroke_width) * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
 
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -665,9 +750,9 @@ func geo_concentric_circles() {
 			styles["stroke"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity), "stroke-width": fmt.Sprintf("%vpx", stroke_width)}
 
-			Svg.Circle(cx, cy, ring_size/2, styles)
+			p.Svg.Circle(cx, cy, ring_size/2, styles)
 
-			val = utils.Hex_val(Hash, 39-i, 1)
+			val = utils.Hex_val(p.Hash, 39-i, 1)
 			opacity = utils.Opacity(val)
 			fill = utils.Fill_color(val)
 
@@ -675,24 +760,24 @@ func geo_concentric_circles() {
 			styles["fill"] = fill
 			styles["fill-opacity"] = opacity
 
-			Svg.Circle(cx, cy, ring_size/4, styles)
+			p.Svg.Circle(cx, cy, ring_size/4, styles)
 
 			i = i + 1
 		}
 	}
 }
 
-func geo_octagons() {
-	square_size := utils.Map(utils.Hex_val(Hash, 0, 1), 0, 15, 10, 60)
+func (p *Pattern) geo_octagons() {
+	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 60)
 	tile := shapes.Build_octagon(square_size)
 
-	Svg.Set_height(int(square_size * 6))
-	Svg.Set_width(int(square_size * 6))
+	p.Svg.Set_height(int(square_size * 6))
+	p.Svg.Set_width(int(square_size * 6))
 
 	i := 0
 	for y := 0; y <= 5; y++ {
 		for x := 0; x <= 5; x++ {
-			val := utils.Hex_val(Hash, i, 1)
+			val := utils.Hex_val(p.Hash, i, 1)
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
@@ -703,13 +788,13 @@ func geo_octagons() {
 			styles["stroke-opacity"] = utils.STROKE_OPACITY
 			styles["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*square_size, float64(y)*square_size)
 
-			Svg.Polyline(tile, styles)
+			p.Svg.Polyline(tile, styles)
 
 			i = i + 1
 		}
 	}
 }
-*/
+
 func (p *Pattern) geo_overlapping_circles() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	diameter := utils.Map(scale, 0, 15, 25, 200)
