@@ -1,3 +1,6 @@
+// Package pattern implements methods to generate a new pattern
+// background for the pattern, type of pattern and particular SVG structure
+// for that pattern
 package pattern
 
 import (
@@ -10,6 +13,7 @@ import (
 	"time"
 )
 
+// All available geo patterns
 var PATTERNS = [16]string{
 	"chevrons",
 	"concentric_circles",
@@ -29,6 +33,8 @@ var PATTERNS = [16]string{
 	"xes",
 }
 
+// Pattern struct that contains attributes like base color, background color
+// pattern type, phrase for the pattern and SHA-1 hash of phrase
 type Pattern struct {
 	Base_color string
 	Color      string
@@ -37,6 +43,8 @@ type Pattern struct {
 	Svg        *svg.SVG
 }
 
+// New parses the arguments and returns an instance of Pattern struct that has linked
+// methods to work further things
 func New(args map[string]string) *Pattern {
 	var phrase, generator, color, base_color string
 
@@ -61,6 +69,7 @@ func New(args map[string]string) *Pattern {
 	return &Pattern{Base_color: base_color, Color: color, Generator: generator, Hash: utils.Hash(phrase), Svg: new(svg.SVG)}
 }
 
+// Svg_str returns string representing pattern's SVG string
 func (p *Pattern) Svg_str() string {
 	p.generate_background()
 	p.generate_pattern()
@@ -68,6 +77,9 @@ func (p *Pattern) Svg_str() string {
 	return p.Svg.Str()
 }
 
+// generate_background decides on background color for the pattern.
+//
+// It uses 'color' or 'base_color' arguments for this task.
 func (p *Pattern) generate_background() {
 	var rgb, color colorful.Color
 
@@ -103,6 +115,7 @@ func (p *Pattern) generate_background() {
 	p.Svg.Rect(0, 0, "100%", "100%", args)
 }
 
+// is_pattern decides whether a pattern is a valid one or not
 func is_pattern(generator string) bool {
 	for _, ptn := range PATTERNS {
 		if ptn == generator {
@@ -112,6 +125,7 @@ func is_pattern(generator string) bool {
 	return false
 }
 
+// generate_pattern decides on type of pattern and build respective SVG object
 func (p *Pattern) generate_pattern() {
 	if p.Generator == "" {
 		p.Generator = PATTERNS[int(utils.Hex_val(p.Hash, 20, 1))]
@@ -157,6 +171,7 @@ func (p *Pattern) generate_pattern() {
 	}
 }
 
+// geo_chevrons build the chevrons SVG pattern
 func (p *Pattern) geo_chevrons() {
 	chevron_width := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 30, 80)
 	chevron_height := chevron_width
@@ -195,6 +210,7 @@ func (p *Pattern) geo_chevrons() {
 	}
 }
 
+// geo_concentric_circles build the concentric_circles SVG pattern
 func (p *Pattern) geo_concentric_circles() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	ring_size := utils.Map(scale, 0, 15, 10, 60)
@@ -238,6 +254,7 @@ func (p *Pattern) geo_concentric_circles() {
 	}
 }
 
+// geo_diamonds build the diamonds SVG pattern
 func (p *Pattern) geo_diamonds() {
 	diamond_width := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 50)
 	diamond_height := utils.Map(utils.Hex_val(p.Hash, 1, 1), 0, 15, 10, 50)
@@ -290,6 +307,7 @@ func (p *Pattern) geo_diamonds() {
 	}
 }
 
+// geo_hexagons build the hexagons SVG pattern
 func (p *Pattern) geo_hexagons() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	side_length := utils.Map(scale, 0, 15, 8, 60)
@@ -350,6 +368,7 @@ func (p *Pattern) geo_hexagons() {
 	}
 }
 
+// geo_mosaic_squares build the mosaic_squares SVG pattern
 func (p *Pattern) geo_mosaic_squares() {
 	triangle_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 15, 50)
 
@@ -382,6 +401,7 @@ func (p *Pattern) geo_mosaic_squares() {
 
 }
 
+// geo_nested_squares build the nested_squares SVG pattern
 func (p *Pattern) geo_nested_squares() {
 	block_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 4, 12)
 	square_size := block_size * 7
@@ -420,6 +440,7 @@ func (p *Pattern) geo_nested_squares() {
 	}
 }
 
+// geo_octagons build the octagons SVG pattern
 func (p *Pattern) geo_octagons() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 60)
 	tile := shapes.Build_octagon(square_size)
@@ -448,6 +469,7 @@ func (p *Pattern) geo_octagons() {
 	}
 }
 
+// geo_overlapping_circles build the overlapping_circles SVG pattern
 func (p *Pattern) geo_overlapping_circles() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	diameter := utils.Map(scale, 0, 15, 25, 200)
@@ -487,6 +509,7 @@ func (p *Pattern) geo_overlapping_circles() {
 	}
 }
 
+// geo_overlapping_rings build the overlapping_rings SVG pattern
 func (p *Pattern) geo_overlapping_rings() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	ring_size := utils.Map(scale, 0, 15, 10, 60)
@@ -527,6 +550,7 @@ func (p *Pattern) geo_overlapping_rings() {
 	}
 }
 
+// geo_plaid build the plaid SVG pattern
 func (p *Pattern) geo_plaid() {
 	height := 0
 	width := 0
@@ -583,6 +607,7 @@ func (p *Pattern) geo_plaid() {
 	p.Svg.Set_width(int(width))
 }
 
+// geo_plus_signs build the plus_signs SVG pattern
 func (p *Pattern) geo_plus_signs() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 25)
 	plus_size := square_size * 3
@@ -635,6 +660,7 @@ func (p *Pattern) geo_plus_signs() {
 	}
 }
 
+// geo_sine_waves build the sine_waves SVG pattern
 func (p *Pattern) geo_sine_waves() {
 	period := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 100, 400)
 	amplitude := utils.Map(utils.Hex_val(p.Hash, 1, 1), 0, 15, 30, 100)
@@ -666,6 +692,7 @@ func (p *Pattern) geo_sine_waves() {
 	}
 }
 
+// geo_squares build the squares SVG pattern
 func (p *Pattern) geo_squares() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 60)
 
@@ -693,6 +720,7 @@ func (p *Pattern) geo_squares() {
 	}
 }
 
+// geo_tessellation build the tessellation SVG pattern
 func (p *Pattern) geo_tessellation() {
 	side_length := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 5, 40)
 	hex_height := side_length * math.Sqrt(3)
@@ -788,6 +816,7 @@ func (p *Pattern) geo_tessellation() {
 	}
 }
 
+// geo_triangles build the triangles SVG pattern
 func (p *Pattern) geo_triangles() {
 	scale := utils.Hex_val(p.Hash, 0, 1)
 	side_length := utils.Map(scale, 0, 15, 15, 80)
@@ -837,6 +866,7 @@ func (p *Pattern) geo_triangles() {
 	}
 }
 
+// geo_xes build the xes SVG pattern
 func (p *Pattern) geo_xes() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 25)
 	x_shape := shapes.Build_plus(square_size)
