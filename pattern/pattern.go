@@ -868,7 +868,7 @@ func (p *Pattern) geo_triangles() {
 func (p *Pattern) geo_xes() {
 	square_size := utils.Map(utils.Hex_val(p.Hash, 0, 1), 0, 15, 10, 25)
 	x_shape := shapes.Build_plus(square_size)
-	x_size := square_size * 3 * 0.943
+	x_size := square_size * 2 * math.Sqrt(2)
 
 	p.Svg.Set_height(int(x_size * 3))
 	p.Svg.Set_width(int(x_size * 3))
@@ -881,47 +881,27 @@ func (p *Pattern) geo_xes() {
 			opacity := utils.Opacity(val)
 			fill := utils.Fill_color(val)
 
-			var dy float64
-			if x%2 == 0 {
-				dy = float64(y)*x_size - x_size*0.5
-			} else {
-				dy = float64(y)*x_size - x_size*0.5 + x_size/4
-			}
-
 			styles := make(map[string]interface{})
 			styles["fill"] = fill
 			styles["style"] = map[string]string{"opacity": fmt.Sprintf("%v", opacity)}
 
-			style := make(map[string]interface{})
-
-			style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-			p.Svg.Group(x_shape, utils.Merge(styles, style))
-
-			if x == 0 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-				p.Svg.Group(x_shape, utils.Merge(styles, style))
-			}
-
-			if y == 0 {
-				if x%2 == 0 {
-					dy = 6*x_size - x_size/2
-				} else {
-					dy = 6*x_size - x_size/2 + x_size/4
+			put := func(x int, y int) {
+				if x > 6 || y < -1 || y > 6 {
+					return
 				}
-
-				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-float64(y)*x_size/2, x_size/2, x_size/2)
-				p.Svg.Group(x_shape, utils.Merge(styles, style))
+				dx := float64(x-1)*x_size/2
+				dy := float64(y-1)*x_size/2
+				if x % 2 == 1 {
+					dy += x_size/4
+				}
+				style := styles
+				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", dx, dy, x_size/2, x_size/2);
+				p.Svg.Group(x_shape, style)
 			}
 
-			if y == 5 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", float64(x)*x_size/2-x_size/2, dy-11*x_size/2, x_size/2, x_size/2)
-				p.Svg.Group(x_shape, utils.Merge(styles, style))
-			}
-
-			if x == 0 && y == 0 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v) rotate(45, %v, %v)", 6*x_size/2-x_size/2, dy-6*x_size/2, x_size/2, x_size/2)
-				p.Svg.Group(x_shape, utils.Merge(styles, style))
-			}
+			put(x, y-6);put(x+6, y-6)
+			put(x, y  );put(x+6, y  )
+			put(x, y+6);put(x+6, y+6)
 
 			i = i + 1
 		}
