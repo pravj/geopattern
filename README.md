@@ -110,3 +110,7 @@ Uri_image(args)
 
 ####Dependencies
 [go-colorful](https://github.com/lucasb-eyer/go-colorful) : for color space conversion
+
+---
+
+Made with *Muzi* and *Appy* by [Pravendra Singh](https://pravj.github.io)
