@@ -282,21 +282,21 @@ func (p *Pattern) geo_diamonds() {
 
 			style := make(map[string]interface{})
 
-			style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*diamond_width-diamond_width/2+dx, diamond_height/2*float64(y)-diamond_height/2)
+			style["transform"] = fmt.Sprintf("translate(%v, %v)", dx + float64(x)*diamond_width - diamond_width/2, diamond_height/2*float64(y) - diamond_height/2)
 			p.Svg.Polyline(diamond, utils.Merge(styles, style))
 
 			if x == 0 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*diamond_width-diamond_width/2+dx, diamond_height/2*float64(y)-diamond_height/2)
+				style["transform"] = fmt.Sprintf("translate(%v, %v)", dx + 6*diamond_width - diamond_width/2, diamond_height/2*float64(y) - diamond_height/2)
 				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 
 			if y == 0 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v)", float64(x)*diamond_width-diamond_width/2+dx, diamond_height/2*6-diamond_height/2)
+				style["transform"] = fmt.Sprintf("translate(%v, %v)", dx + float64(x)*diamond_width - diamond_width/2, diamond_height/2*6 - diamond_height/2)
 				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 
 			if x == 0 && y == 0 {
-				style["transform"] = fmt.Sprintf("translate(%v, %v)", 6*diamond_width-diamond_width/2+dx, diamond_height/2*6-diamond_height/2)
+				style["transform"] = fmt.Sprintf("translate(%v, %v)", dx + 6*diamond_width - diamond_width/2, diamond_height/2*6 - diamond_height/2)
 				p.Svg.Polyline(diamond, utils.Merge(styles, style))
 			}
 

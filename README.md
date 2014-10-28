@@ -66,6 +66,9 @@ Uri_image(args)
 ###### concentric_circles
 ![Concentric_Circles](https://raw.githubusercontent.com/pravj/geo_pattern/master/examples/patterns/concentric_circles.png)
 
+###### diamonds
+![Diamonds](https://raw.githubusercontent.com/pravj/geo_pattern/master/examples/patterns/diamonds.png)
+
 ###### hexagons
 ![Hexagons](https://raw.githubusercontent.com/pravj/geo_pattern/master/examples/patterns/hexagons.png)
 
