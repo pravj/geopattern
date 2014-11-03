@@ -5,6 +5,8 @@ geo_pattern
 
 [![GoDoc](https://godoc.org/github.com/pravj/geo_pattern?status.svg)](http://godoc.org/github.com/pravj/geo_pattern)
 
+> Read geo_pattern's development story [**geo_pattern: going on the Go path**](http://pravj.github.io/blog/2014/11/03/going-on-the-go-path/)
+
 ![Nested Squares Pattern](https://raw.githubusercontent.com/pravj/geo_pattern/master/examples/patterns/pattern.png)
 
 Generate beautiful tiling SVG patterns from a string. The string is converted into a SHA and a color and pattern are determined based on the values in the hash. The color is determined by shifting the hue from a default (or passed in) base color. One of 16 patterns is used (or you can specify one) and the sizing of the pattern elements is also determined by the hash values.
