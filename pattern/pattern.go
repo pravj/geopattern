@@ -107,7 +107,7 @@ func (p *Pattern) generate_background() {
 		rgb = colorful.Color{h, c, l}
 	}
 
-	r, g, b := int(rgb.R/2), int(rgb.G*105), int(rgb.B*150)
+	r, g, b := int(rgb.R*105), int(rgb.G*105), int(rgb.B*150)
 
 	args := make(map[string]interface{})
 	args["fill"] = fmt.Sprintf("rgb(%v, %v, %v)", r, g, b)
