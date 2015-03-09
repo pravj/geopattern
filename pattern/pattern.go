@@ -6,9 +6,9 @@ package pattern
 import (
 	"fmt"
 	"github.com/lucasb-eyer/go-colorful"
-	"github.com/pravj/geo_pattern/shapes"
-	"github.com/pravj/geo_pattern/svg"
-	"github.com/pravj/geo_pattern/utils"
+	"github.com/pravj/geoPattern/shapes"
+	"github.com/pravj/geoPattern/svg"
+	"github.com/pravj/geoPattern/utils"
 	"math"
 	"time"
 )
@@ -16,17 +16,17 @@ import (
 // All available geo patterns
 var PATTERNS = [16]string{
 	"chevrons",
-	"concentric_circles",
+	"concentric-circles",
 	"diamonds",
 	"hexagons",
-	"mosaic_squares",
-	"nested_squares",
+	"mosaic-squares",
+	"nested-squares",
 	"octagons",
-	"overlapping_circles",
-	"overlapping_rings",
+	"overlapping-circles",
+	"overlapping-rings",
 	"plaid",
-	"plus_signs",
-	"sine_waves",
+	"plus-signs",
+	"sine-waves",
 	"squares",
 	"tessellation",
 	"triangles",
@@ -138,27 +138,27 @@ func (p *Pattern) genaratePattern() {
 	switch p.Generator {
 	case "chevrons":
 		p.geoChevrons()
-	case "concentric_circles":
+	case "concentric-circles":
 		p.geoConcentricCircles()
 	case "diamonds":
 		p.geoDiamonds()
 	case "hexagons":
 		p.geoHexagons()
-	case "mosaic_squares":
+	case "mosaic-squares":
 		p.geoMosaicSquares()
-	case "nested_squares":
+	case "nested-squares":
 		p.geoNestedSquares()
 	case "octagons":
 		p.geoOctagons()
-	case "overlapping_circles":
+	case "overlapping-circles":
 		p.geoOverlappingCircles()
-	case "overlapping_rings":
+	case "overlapping-rings":
 		p.geoOverlappingRings()
 	case "plaid":
 		p.geoPlaid()
-	case "plus_signs":
+	case "plus-signs":
 		p.geoPlusSigns()
-	case "sine_waves":
+	case "sine-waves":
 		p.geoSineWaves()
 	case "squares":
 		p.geoSquares()

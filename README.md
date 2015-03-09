@@ -65,8 +65,8 @@ URIimage(args)
 ###### chevrons
 ![Chevrons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/chevrons.png)
 
-###### concentric_circles
-![Concentric_Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/concentric_circles.png)
+###### concentric-circles
+![Concentric-Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/concentric-circles.png)
 
 ###### diamonds
 ![Diamonds](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/diamonds.png)
@@ -74,29 +74,29 @@ URIimage(args)
 ###### hexagons
 ![Hexagons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/hexagons.png)
 
-###### mosaic_squares
-![Mosaic_Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/mosaic_squares.png)
+###### mosaic-squares
+![Mosaic-Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/mosaic-squares.png)
 
-###### nested_squares
-![Nested_Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/nested_squares.png)
+###### nested-squares
+![Nested-Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/nested-squares.png)
 
 ###### octagons
 ![Octagons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/octagons.png)
 
-###### overlapping_circles
-![Overlapping_Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping_circles.png)
+###### overlapping-circles
+![Overlapping-Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping-circles.png)
 
-###### overlapping_rings
-![Overlapping_rings](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping_rings.png)
+###### overlapping-rings
+![Overlapping-rings](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping-rings.png)
 
 ###### plaid
 ![Plaid](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/plaid.png)
 
-###### plus_signs
-![Plus_Signs](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/plus_signs.png)
+###### plus-signs
+![Plus-Signs](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/plus-signs.png)
 
-###### sine_waves
-![Sine_Waves](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/sine_waves.png)
+###### sine-waves
+![Sine-Waves](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/sine-waves.png)
 
 ###### squares
 ![Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/squares.png)

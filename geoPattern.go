@@ -1,11 +1,10 @@
-// Package geo_pattern creates beautiful generative background image
-// patterns from a string.
-package geo_pattern
+// Package geoPattern creates beautiful generative image patterns from a string.
+package geoPattern
 
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/pravj/geo_pattern/pattern"
+	"github.com/pravj/geoPattern/pattern"
 )
 
 // Generate returns pattern's SVG string

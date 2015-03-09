@@ -3,8 +3,8 @@ package shapes
 
 import (
 	"fmt"
-	"github.com/pravj/geo_pattern/svg"
-	"github.com/pravj/geo_pattern/utils"
+	"github.com/pravj/geoPattern/svg"
+	"github.com/pravj/geoPattern/utils"
 	"math"
 )
 
