@@ -11,13 +11,13 @@ import (
 // constants representing stroke, fill's opacity and color,
 // base color, minimum and maximum opacity value
 const (
-	BASE_COLOR       string  = "#9e2c7b"
-	STROKE_COLOR     string  = "#000"
-	STROKE_OPACITY   float64 = 0.02
-	FILL_COLOR_DARK  string  = "#222"
-	FILL_COLOR_LIGHT string  = "#ddd"
-	OPACITY_MIN      float64 = 0.02
-	OPACITY_MAX      float64 = 0.15
+	BaseColor       string  = "#9e2c7b"
+	StrokeColor     string  = "#000"
+	StrokeOpacity   float64 = 0.02
+	FillColorDark  string  = "#222"
+	FillColorLight string  = "#ddd"
+	OpacityMin      float64 = 0.02
+	OpacityMax      float64 = 0.15
 )
 
 // Hash returns SHA-1 encryption of a string
@@ -31,44 +31,43 @@ func Hash(s string) string {
 }
 
 // Map returns respective value of a number from a range to different range
-func Map(value, a_min, a_max, b_min, b_max float64) float64 {
-	a_range := a_max - a_min
-	b_range := b_max - b_min
+func Map(value, aMin, aMax, bMin, bMax float64) float64 {
+	aRange := aMax - aMin
+	bRange := bMax - bMin
 
-	return (b_max - (a_max-value)*(b_range/a_range))
+	return (bMax - (aMax-value)*(bRange/aRange))
 }
 
-// Hex_val returns decimal representation of a substring of a hexa decimal string
-func Hex_val(str string, index, length int) float64 {
-	hex_str := str[index : index+length]
+// HexVal returns decimal representation of a substring of a hexa decimal string
+func HexVal(str string, index, length int) float64 {
+	hexStr := str[index : index+length]
 
-	hex_val, err := strconv.ParseInt(hex_str, 16, 0)
+	hexVal, err := strconv.ParseInt(hexStr, 16, 0)
 	if err != nil {
 		panic(err)
 	}
 
-	return float64(hex_val)
+	return float64(hexVal)
 }
 
 // Merge merges two 'map' objects and returns the resultant object
-func Merge(map_a map[string]interface{}, map_b map[string]interface{}) map[string]interface{} {
-	for k, v := range map_a {
-		map_b[k] = v
+func Merge(mapA map[string]interface{}, mapB map[string]interface{}) map[string]interface{} {
+	for k, v := range mapA {
+		mapB[k] = v
 	}
 
-	return map_b
+	return mapB
 }
 
 // Opacity returns opacity value in a particular range
 func Opacity(value float64) float64 {
-	return Map(value, 0, 15, OPACITY_MIN, OPACITY_MAX)
+	return Map(value, 0, 15, OpacityMin, OpacityMax)
 }
 
-// Fill_color returns string to be used for fill color
-func Fill_color(value float64) string {
+// FillColor returns string to be used for fill color
+func FillColor(value float64) string {
 	if int(value)%2 == 0 {
-		return FILL_COLOR_LIGHT
-	} else {
-		return FILL_COLOR_DARK
+		return FillColorLight
 	}
+	return FillColorDark
 }

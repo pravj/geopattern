@@ -8,24 +8,24 @@ import (
 	"github.com/pravj/geo_pattern/pattern"
 )
 
-// Returns pattern's SVG string
+// Generate returns pattern's SVG string
 func Generate(args map[string]string) string {
 	p := pattern.New(args)
 
-	return p.Svg_str()
+	return p.SvgStr()
 }
 
-// Returns pattern's Base64 encoded string
-func Base64_string(args map[string]string) string {
-	svg_str := Generate(args)
-	base64_str := base64.StdEncoding.EncodeToString([]byte(svg_str))
+// Base64String returns pattern's Base64 encoded string
+func Base64String(args map[string]string) string {
+	svgStr := Generate(args)
+	base64Str := base64.StdEncoding.EncodeToString([]byte(svgStr))
 
-	return base64_str
+	return base64Str
 }
 
-// Returns pattern's uri image string
-func Uri_image(args map[string]string) string {
-	base64_str := Base64_string(args)
+// URIimage returns pattern's uri image string
+func URIimage(args map[string]string) string {
+	base64Str := Base64String(args)
 
-	return fmt.Sprintf("url(data:image/svg+xml;base64,%s);", base64_str)
+	return fmt.Sprintf("url(data:image/svg+xml;base64,%s);", base64Str)
 }

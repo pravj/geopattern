@@ -8,49 +8,49 @@ import (
 	"math"
 )
 
-// Build_octagon returns string representing an octagon shape
-func Build_octagon(square_size float64) string {
-	s := square_size
+// BuildOctagon returns string representing an octagon shape
+func BuildOctagon(squareSize float64) string {
+	s := squareSize
 	c := 0.33 * s
 
 	return fmt.Sprintf("%v,0,%v,0,%v,%v,%v,%v,%v,%v,%v,%v,0,%v,0,%v,%v,0", c, s-c, s, c, s, s-c, s-c, s, c, s, s-c, c, c)
 }
 
-// Build_triangle returns string representing a triangle shape
-func Build_triangle(side_length, height float64) string {
-	half_width := side_length / 2
+// BuildTriangle returns string representing a triangle shape
+func BuildTriangle(sideLength, height float64) string {
+	halfWidth := sideLength / 2
 
-	return fmt.Sprintf("%v,0,%v,%v,0,%v,%v,0", half_width, side_length, height, height, half_width)
+	return fmt.Sprintf("%v,0,%v,%v,0,%v,%v,0", halfWidth, sideLength, height, height, halfWidth)
 }
 
-// Build_diamond returns string representing a diamond shape
-func Build_diamond(width, height float64) string {
+// BuildDiamond returns string representing a diamond shape
+func BuildDiamond(width, height float64) string {
 	return fmt.Sprintf("%v,0,%v,%v,%v,%v,0,%v", width/2, width, height/2, width/2, height, height/2)
 }
 
-// Build_right_triangle returns string representing a right angle triangle shape
-func Build_right_triangle(side_length float64) string {
-	return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", side_length, side_length, side_length)
+// BuildRightTriangle returns string representing a right angle triangle shape
+func BuildRightTriangle(sideLength float64) string {
+	return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", sideLength, sideLength, sideLength)
 }
 
-// Build_rotated_triangle returns string representing a rotated triangle shape
-func Build_rotated_triangle(side_length, width float64) string {
-	half_height := side_length / 2
+// BuildRotatedTriangle returns string representing a rotated triangle shape
+func BuildRotatedTriangle(sideLength, width float64) string {
+	halfHeight := sideLength / 2
 
-	return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", width, half_height, side_length)
+	return fmt.Sprintf("0,0,%v,%v,0,%v,0,0", width, halfHeight, sideLength)
 }
 
-// Build_hexagon returns string representing a hexagon shape
-func Build_hexagon(side_length float64) string {
-	c := side_length
+// BuildHexagon returns string representing a hexagon shape
+func BuildHexagon(sideLength float64) string {
+	c := sideLength
 	a := c / 2
 	b := math.Sin(60*math.Pi/180) * c
 
 	return fmt.Sprintf("0,%v,%v,0,%v,0,%v,%v,%v,%v,%v,%v,0,%v", b, a, a+c, 2*c, b, a+c, 2*b, a, 2*b, b)
 }
 
-// Build_chevron returns string representing a chevron shape
-func Build_chevron(width, height float64) [2]string {
+// BuildChevron returns string representing a chevron shape
+func BuildChevron(width, height float64) [2]string {
 	e := height * 0.66
 	var elements [2]string
 
@@ -60,72 +60,72 @@ func Build_chevron(width, height float64) [2]string {
 	return elements
 }
 
-// Build_plus returns string representing an plus shape
-func Build_plus(square_size float64) [2]string {
+// BuildPlus returns string representing an plus shape
+func BuildPlus(squareSize float64) [2]string {
 	var elements [2]string
 
-	elements[0] = fmt.Sprintf("<rect x='%v' y='0' width='%v' height='%v' />", square_size, square_size, square_size*3)
-	elements[1] = fmt.Sprintf("<rect x='0' y='%v' width='%v' height='%v' />", square_size, square_size*3, square_size)
+	elements[0] = fmt.Sprintf("<rect x='%v' y='0' width='%v' height='%v' />", squareSize, squareSize, squareSize*3)
+	elements[1] = fmt.Sprintf("<rect x='0' y='%v' width='%v' height='%v' />", squareSize, squareSize*3, squareSize)
 
 	return elements
 }
 
-// Draw_inner_mosaic_tile returns string representing an inner mosaic tile shape
-func Draw_inner_mosaic_tile(s *svg.SVG, x, y, triangle_size float64, values [2]float64) {
-	triangle := Build_right_triangle(triangle_size)
+// DrawInnerMosaicTile returns string representing an inner mosaic tile shape
+func DrawInnerMosaicTile(s *svg.SVG, x, y, triangleSize float64, values [2]float64) {
+	triangle := BuildRightTriangle(triangleSize)
 	opacity := utils.Opacity(values[0])
-	fill := utils.Fill_color(values[0])
+	fill := utils.FillColor(values[0])
 
 	styles := make(map[string]interface{})
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
-	styles["stroke"] = utils.STROKE_COLOR
-	styles["stroke-opacity"] = utils.STROKE_OPACITY
+	styles["stroke"] = utils.StrokeColor
+	styles["stroke-opacity"] = utils.StrokeOpacity
 
 	style := make(map[string]interface{})
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangle_size, y)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangleSize, y)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x+triangle_size, y+triangle_size*2)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x+triangleSize, y+triangleSize*2)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
 	opacity = utils.Opacity(values[1])
-	fill = utils.Fill_color(values[1])
+	fill = utils.FillColor(values[1])
 
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangle_size, y+triangle_size*2)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangleSize, y+triangleSize*2)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x+triangle_size, y)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x+triangleSize, y)
 	s.Polyline(triangle, utils.Merge(styles, style))
 }
 
-// Draw_outer_mosaic_tile returns string representing an outer mosaic tile shape
-func Draw_outer_mosaic_tile(s *svg.SVG, x, y, triangle_size, value float64) {
+// DrawOuterMosaicTile returns string representing an outer mosaic tile shape
+func DrawOuterMosaicTile(s *svg.SVG, x, y, triangleSize, value float64) {
 	opacity := utils.Opacity(value)
-	fill := utils.Fill_color(value)
-	triangle := Build_right_triangle(triangle_size)
+	fill := utils.FillColor(value)
+	triangle := BuildRightTriangle(triangleSize)
 
 	styles := make(map[string]interface{})
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
-	styles["stroke"] = utils.STROKE_COLOR
-	styles["stroke-opacity"] = utils.STROKE_OPACITY
+	styles["stroke"] = utils.StrokeColor
+	styles["stroke-opacity"] = utils.StrokeOpacity
 
 	style := make(map[string]interface{})
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x, y+triangle_size)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x, y+triangleSize)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangle_size*2, y+triangle_size)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangleSize*2, y+triangleSize)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x, y+triangle_size)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x, y+triangleSize)
 	s.Polyline(triangle, utils.Merge(styles, style))
 
-	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangle_size*2, y+triangle_size)
+	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangleSize*2, y+triangleSize)
 	s.Polyline(triangle, utils.Merge(styles, style))
 }
