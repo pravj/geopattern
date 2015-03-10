@@ -1,13 +1,13 @@
-geoPattern
+geopattern
 ===========
 > Create beautiful generative image patterns from a string in golang.
 > > Go port of [Jason Long](https://github.com/jasonlong)'s awesome [GeoPattern](https://github.com/jasonlong/geo_pattern) library.
 
-[![GoDoc](https://godoc.org/github.com/pravj/geoPattern?status.svg)](http://godoc.org/github.com/pravj/geoPattern)
+[![GoDoc](https://godoc.org/github.com/pravj/geopattern?status.svg)](http://godoc.org/github.com/pravj/geopattern)
 
-> Read geoPattern's development story [**geo_pattern: going on the Go path**](http://pravj.github.io/blog/2014/11/03/going-on-the-go-path/)
+> Read geopattern's development story [**geo_pattern: going on the Go path**](http://pravj.github.io/blog/2014/11/03/going-on-the-go-path/)
 
-![Nested Squares Pattern](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/pattern.png)
+![Nested Squares Pattern](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/pattern.png)
 
 Generate beautiful tiling SVG patterns from a string. The string is converted into a SHA and a color and pattern are determined based on the values in the hash. The color is determined by shifting the hue from a default (or passed in) base color. One of 16 patterns is used (or you can specify one) and the sizing of the pattern elements is also determined by the hash values.
 
@@ -16,10 +16,10 @@ You can use the generated pattern as the background-image for a container. Using
 See the GitHub Guides [site](https://guides.github.com) as an example of this library in action. GitHub Guides use [Original](https://github.com/jasonlong/geo_pattern) Ruby implementation.
 
 ####Installation
-`go get github.com/pravj/geoPattern`
+`go get github.com/pravj/geopattern`
 
 ####Usage
-[Example](https://github.com/pravj/geoPattern/tree/master/examples) directory contains sample go programs that explains use of `geoPattern`
+[Example](https://github.com/pravj/geopattern/tree/master/examples) directory contains sample go programs that explains use of `geopattern`
 
 ####API
 
@@ -63,52 +63,52 @@ URIimage(args)
 ####Available Pattern
 
 ###### chevrons
-![Chevrons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/chevrons.png)
+![Chevrons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/chevrons.png)
 
 ###### concentric-circles
-![Concentric-Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/concentric-circles.png)
+![Concentric-Circles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/concentric-circles.png)
 
 ###### diamonds
-![Diamonds](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/diamonds.png)
+![Diamonds](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/diamonds.png)
 
 ###### hexagons
-![Hexagons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/hexagons.png)
+![Hexagons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/hexagons.png)
 
 ###### mosaic-squares
-![Mosaic-Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/mosaic-squares.png)
+![Mosaic-Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/mosaic-squares.png)
 
 ###### nested-squares
-![Nested-Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/nested-squares.png)
+![Nested-Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/nested-squares.png)
 
 ###### octagons
-![Octagons](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/octagons.png)
+![Octagons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/octagons.png)
 
 ###### overlapping-circles
-![Overlapping-Circles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping-circles.png)
+![Overlapping-Circles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/overlapping-circles.png)
 
 ###### overlapping-rings
-![Overlapping-rings](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/overlapping-rings.png)
+![Overlapping-rings](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/overlapping-rings.png)
 
 ###### plaid
-![Plaid](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/plaid.png)
+![Plaid](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/plaid.png)
 
 ###### plus-signs
-![Plus-Signs](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/plus-signs.png)
+![Plus-Signs](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/plus-signs.png)
 
 ###### sine-waves
-![Sine-Waves](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/sine-waves.png)
+![Sine-Waves](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/sine-waves.png)
 
 ###### squares
-![Squares](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/squares.png)
+![Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/squares.png)
 
 ###### tessellation
-![Tessellation](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/tessellation.png)
+![Tessellation](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/tessellation.png)
 
 ###### triangles
-![Triangles](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/triangles.png)
+![Triangles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/triangles.png)
 
 ###### xes
-![Xes](https://raw.githubusercontent.com/pravj/geoPattern/master/examples/patterns/xes.png)
+![Xes](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/xes.png)
 
 ####Dependencies
 [go-colorful](https://github.com/lucasb-eyer/go-colorful) : for color space conversion

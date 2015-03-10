@@ -1,3 +1,9 @@
+## [v1.4.1] - 2015-03-10
+
+### Change
+* Rename project to **geopattern**, after [this discussion](https://github.com/avelino/awesome-go/issues/305)
+
+
 ## [v1.4.0] - 2015-03-09
 
 ### Add

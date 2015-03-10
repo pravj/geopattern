@@ -6,9 +6,9 @@ package pattern
 import (
 	"fmt"
 	"github.com/lucasb-eyer/go-colorful"
-	"github.com/pravj/geoPattern/shapes"
-	"github.com/pravj/geoPattern/svg"
-	"github.com/pravj/geoPattern/utils"
+	"github.com/pravj/geopattern/shapes"
+	"github.com/pravj/geopattern/svg"
+	"github.com/pravj/geopattern/utils"
 	"math"
 	"time"
 )
