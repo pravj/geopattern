@@ -7,7 +7,9 @@ import (
 
 // Prints pattern's SVG string for a specific pattern
 func main() {
-	args := map[string]string{"generator": "squares"}
+	args := geopattern.Pattern{
+		Generator: "squares",
+	}
 	gp := geopattern.Generate(args)
 	fmt.Println(gp)
 }

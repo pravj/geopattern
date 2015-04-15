@@ -1,10 +1,7 @@
-// Package shapes implements some geometric shapes to be used in project
-package shapes
+package geopattern
 
 import (
 	"fmt"
-	"github.com/pravj/geopattern/svg"
-	"github.com/pravj/geopattern/utils"
 	"math"
 )
 
@@ -71,61 +68,61 @@ func BuildPlus(squareSize float64) [2]string {
 }
 
 // DrawInnerMosaicTile returns string representing an inner mosaic tile shape
-func DrawInnerMosaicTile(s *svg.SVG, x, y, triangleSize float64, values [2]float64) {
+func DrawInnerMosaicTile(s *SVG, x, y, triangleSize float64, values [2]float64) {
 	triangle := BuildRightTriangle(triangleSize)
-	opacity := utils.Opacity(values[0])
-	fill := utils.FillColor(values[0])
+	opacity := Opacity(values[0])
+	fill := FillColor(values[0])
 
 	styles := make(map[string]interface{})
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
-	styles["stroke"] = utils.StrokeColor
-	styles["stroke-opacity"] = utils.StrokeOpacity
+	styles["stroke"] = StrokeColor
+	styles["stroke-opacity"] = StrokeOpacity
 
 	style := make(map[string]interface{})
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangleSize, y)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x+triangleSize, y+triangleSize*2)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
-	opacity = utils.Opacity(values[1])
-	fill = utils.FillColor(values[1])
+	opacity = Opacity(values[1])
+	fill = FillColor(values[1])
 
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangleSize, y+triangleSize*2)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x+triangleSize, y)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 }
 
 // DrawOuterMosaicTile returns string representing an outer mosaic tile shape
-func DrawOuterMosaicTile(s *svg.SVG, x, y, triangleSize, value float64) {
-	opacity := utils.Opacity(value)
-	fill := utils.FillColor(value)
+func DrawOuterMosaicTile(s *SVG, x, y, triangleSize, value float64) {
+	opacity := Opacity(value)
+	fill := FillColor(value)
 	triangle := BuildRightTriangle(triangleSize)
 
 	styles := make(map[string]interface{})
 	styles["fill"] = fill
 	styles["fill-opacity"] = opacity
-	styles["stroke"] = utils.StrokeColor
-	styles["stroke-opacity"] = utils.StrokeOpacity
+	styles["stroke"] = StrokeColor
+	styles["stroke-opacity"] = StrokeOpacity
 
 	style := make(map[string]interface{})
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, -1)", x, y+triangleSize)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, -1)", x+triangleSize*2, y+triangleSize)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(1, 1)", x, y+triangleSize)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 
 	style["transform"] = fmt.Sprintf("translate(%v, %v) scale(-1, 1)", x+triangleSize*2, y+triangleSize)
-	s.Polyline(triangle, utils.Merge(styles, style))
+	s.Polyline(triangle, Merge(styles, style))
 }

@@ -1,15 +1,15 @@
-// Package svg provide methods to work effortlessly with SVG.
-package svg
+package geopattern
 
 import (
 	"fmt"
 	"reflect"
+	"sort"
 )
 
 // SVG struct, SVG contains elementry attributes like
 // svg string, width, height
 type SVG struct {
-	svgString    string
+	svgString     string
 	width, height int
 }
 
@@ -77,21 +77,36 @@ func (s *SVG) Group(elements [2]string, args map[string]interface{}) {
 func (s *SVG) WriteArgs(args map[string]interface{}) string {
 	str := ""
 
-	for k, v := range args {
-		objType := fmt.Sprintf("%s", reflect.TypeOf(v))
+	// Store the keys in slice in sorted order
+	// This is necessary for testing (to ensure the same order of attributes), but it adds a performance hit
+	// This needs to be a struct, NOT a map!
+	var keys []string
+	for k := range args {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		objType := fmt.Sprintf("%s", reflect.TypeOf(args[k]))
 
 		switch objType {
 		case "string":
-			str += fmt.Sprintf("%s='%s' ", k, v)
+			str += fmt.Sprintf("%s='%s' ", k, args[k])
 		case "int":
-			str += fmt.Sprintf("%s='%v' ", k, v)
+			str += fmt.Sprintf("%s='%v' ", k, args[k])
 		case "float64":
-			str += fmt.Sprintf("%s='%v' ", k, v)
+			str += fmt.Sprintf("%s='%v' ", k, args[k])
 		default:
 			{
+				//Same kind of sorting as above
 				str += fmt.Sprintf("%s='", k)
-				for K, V := range v.(map[string]string) {
-					str += fmt.Sprintf("%s:%s;", K, V)
+				var subkeys []string
+				for e := range args[k].(map[string]string) {
+					subkeys = append(subkeys, e)
+				}
+				sort.Strings(subkeys)
+				for _, e := range subkeys {
+					str += fmt.Sprintf("%s:%s;", e, args[k].(map[string]string)[e])
 				}
 				str += "' "
 			}

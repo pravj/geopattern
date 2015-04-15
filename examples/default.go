@@ -7,7 +7,7 @@ import (
 
 // Prints pattern's SVG string without any argument
 func main() {
-	args := map[string]string{}
+	args := geopattern.Pattern{}
 	gp := geopattern.Generate(args)
 	fmt.Println(gp)
 }
