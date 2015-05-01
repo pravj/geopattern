@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Thesandlord/geopattern"
+	"github.com/pravj/geopattern"
 )
 
 // Prints pattern's SVG string with a specific background color
