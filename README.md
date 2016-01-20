@@ -5,7 +5,7 @@ geopattern
 
 [![GoDoc](https://godoc.org/github.com/pravj/geopattern?status.svg)](http://godoc.org/github.com/pravj/geopattern)
 
-> Read geopattern's development story [**geo_pattern: going on the Go path**](https://pravj.github.io/blog/going-on-the-go-path/)
+> Read geopattern's development story [**geo_pattern: going on the Go path**](http://pravj.github.io/blog/going-on-the-go-path/)
 
 ![Nested Squares Pattern](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/pattern.png)
 
