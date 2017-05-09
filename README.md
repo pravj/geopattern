@@ -15,102 +15,114 @@ You can use the generated pattern as the background-image for a container. Using
 
 See the GitHub Guides [site](https://guides.github.com) as an example of this library in action. GitHub Guides use [Original](https://github.com/jasonlong/geo_pattern) Ruby implementation.
 
-####Installation
+## Installation
+
 `go get github.com/pravj/geopattern`
 
-####Usage
+## Usage
+
 [Example](https://github.com/pravj/geopattern/tree/master/examples) directory contains sample go programs that explains use of `geopattern`
 
-####API
+## API
 
-#####Arguments for functions returning pattern's string
+### Arguments for functions returning pattern's string
 
-######`phrase` : custom pattern phrase
+#### `phrase` : custom pattern phrase
+
 ```
 args := map[string]string{"phrase": "My Custom Phrase"}
 ```
 
-######`generator` : custom pattern type
+#### `generator` : custom pattern type
+
 ```
 args := map[string]string{"generator": "plaid"}
 ```
 
-######`color` : custom background color
+#### `color` : custom background color
+
 ```
 args := map[string]string{"color": "#3b5998"}
 ```
 
-######`baseColor` : custom base color that decides background color
+#### `baseColor` : custom base color that decides background color
+
 ```
 args := map[string]string{"baseColor": "#ffcc00"}
 ```
 ---
-#####Functions provided by package for pattern's string representation
 
-######Get the SVG string :
+### Functions provided by package for pattern's string representation
+
+#### Get the SVG string :
+
 ```
 Generate(args)
 ```
-######Get the Base64 encoded string :
+
+#### Get the Base64 encoded string :
+
 ```
 Base64String(args)
 ```
-######Get uri image string :
+
+#### Get uri image string :
+
 ```
 URIimage(args)
 ```
 
-####Available Pattern
+## Available Pattern
 
-###### chevrons
+#### chevrons
 ![Chevrons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/chevrons.png)
 
-###### concentric-circles
+#### concentric-circles
 ![Concentric-Circles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/concentric-circles.png)
 
-###### diamonds
+#### diamonds
 ![Diamonds](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/diamonds.png)
 
-###### hexagons
+#### hexagons
 ![Hexagons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/hexagons.png)
 
-###### mosaic-squares
+#### mosaic-squares
 ![Mosaic-Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/mosaic-squares.png)
 
-###### nested-squares
+#### nested-squares
 ![Nested-Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/nested-squares.png)
 
-###### octagons
+#### octagons
 ![Octagons](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/octagons.png)
 
-###### overlapping-circles
+#### overlapping-circles
 ![Overlapping-Circles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/overlapping-circles.png)
 
-###### overlapping-rings
+#### overlapping-rings
 ![Overlapping-rings](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/overlapping-rings.png)
 
-###### plaid
+#### plaid
 ![Plaid](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/plaid.png)
 
-###### plus-signs
+#### plus-signs
 ![Plus-Signs](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/plus-signs.png)
 
-###### sine-waves
+#### sine-waves
 ![Sine-Waves](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/sine-waves.png)
 
-###### squares
+#### squares
 ![Squares](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/squares.png)
 
-###### tessellation
+#### tessellation
 ![Tessellation](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/tessellation.png)
 
-###### triangles
+#### triangles
 ![Triangles](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/triangles.png)
 
-###### xes
+#### xes
 ![Xes](https://raw.githubusercontent.com/pravj/geopattern/master/examples/patterns/xes.png)
 
-####Dependencies
+## Dependencies
 [go-colorful](https://github.com/lucasb-eyer/go-colorful) : for color space conversion
 
 ---
