@@ -7,7 +7,7 @@ import (
 
 // Prints pattern's uri image string
 func main() {
-	args := map[string]string{}
+	args := geopattern.Pattern{}
 	gp := geopattern.URIimage(args)
 	fmt.Println(gp)
 }

@@ -7,7 +7,10 @@ import (
 
 // Prints pattern's SVG string with a specific background color
 func main() {
-	args := map[string]string{"color": "#f9b"}
+	geopattern.SetTime(1234)
+	args := geopattern.Pattern{
+		Color: "#f9b",
+	}
 	gp := geopattern.Generate(args)
 	fmt.Println(gp)
 }

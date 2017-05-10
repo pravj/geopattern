@@ -1,6 +1,4 @@
-// Package utils provide utility functions that helps
-// development across the project.
-package utils
+package geopattern
 
 import (
 	"crypto/sha1"

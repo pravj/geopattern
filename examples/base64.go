@@ -7,7 +7,7 @@ import (
 
 // Prints pattern's Base64 encoded string
 func main() {
-	args := map[string]string{}
+	args := geopattern.Pattern{}
 	gp := geopattern.Base64String(args)
 	fmt.Println(gp)
 }

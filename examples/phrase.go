@@ -7,7 +7,9 @@ import (
 
 // Prints pattern's SVG string for a phrase argument
 func main() {
-	args := map[string]string{"phrase": "O"}
+	args := geopattern.Pattern{
+		Phrase: "O",
+	}
 	gp := geopattern.Generate(args)
 	fmt.Println(gp)
 }
