@@ -29,25 +29,25 @@ See the GitHub Guides [site](https://guides.github.com) as an example of this li
 
 #### `phrase` : custom pattern phrase
 
-```
+```go
 args := map[string]string{"phrase": "My Custom Phrase"}
 ```
 
 #### `generator` : custom pattern type
 
-```
+```go
 args := map[string]string{"generator": "plaid"}
 ```
 
 #### `color` : custom background color
 
-```
+```go
 args := map[string]string{"color": "#3b5998"}
 ```
 
 #### `baseColor` : custom base color that decides background color
 
-```
+```go
 args := map[string]string{"baseColor": "#ffcc00"}
 ```
 ---
@@ -56,19 +56,19 @@ args := map[string]string{"baseColor": "#ffcc00"}
 
 #### Get the SVG string :
 
-```
+```go
 Generate(args)
 ```
 
 #### Get the Base64 encoded string :
 
-```
+```go
 Base64String(args)
 ```
 
 #### Get uri image string :
 
-```
+```go
 URIimage(args)
 ```
 
